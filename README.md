@@ -15,6 +15,7 @@ A landing page for a fictional AI automation agency, designed as a **living miss
 - **Live ops feed** - a simulated production console with real timestamps, retries that recover, and `HUMAN INTERVENTIONS TODAY: 0`
 - **Seven phases, seven clauses** - sticky radial gauge, self-checking terms
 - **The TERMLINK** - a Pip-Boy-style hardware terminal: log in, answer the smith's questions line by line, transmit
+- **MANUAL MODE** - whack-a-task with a cast of characters (angry invoices, pleading emails, a coffee mug you must NOT whack), then FLEET MODE plays your shift perfectly
 - Press **`7`** for overdrive - and six more protocols are hidden on the page
 - Sprites from Kenney's CC0 [1-Bit Pack](https://kenney.nl/assets/1-bit-pack) (see assets/sprites/LICENSE.txt)
 

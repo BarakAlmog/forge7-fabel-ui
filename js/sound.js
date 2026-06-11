@@ -79,6 +79,32 @@ export class SoundDeck {
     this._tone({ freq: 180, end: 1400, dur: 0.5, type: "sawtooth", gain: 0.028 });
   }
 
+  /* whack-a-task: the percussion section */
+  whack() {
+    this._tone({ freq: 190, end: 65, dur: 0.07, type: "square", gain: 0.07 });
+    this._tone({ freq: 950, end: 700, dur: 0.018, type: "sine", gain: 0.03 });
+  }
+  splat() {
+    this._tone({ freq: 720, end: 130, dur: 0.1, type: "sawtooth", gain: 0.045 });
+  }
+  clang() {
+    this._tone({ freq: 330, end: 300, dur: 0.09, type: "triangle", gain: 0.05 });
+    this._tone({ freq: 495, end: 470, dur: 0.07, type: "triangle", gain: 0.03, delay: 0.004 });
+  }
+  sad() {
+    // two-note trombone of shame
+    this._tone({ freq: 392, end: 370, dur: 0.16, type: "sawtooth", gain: 0.035 });
+    this._tone({ freq: 311, end: 280, dur: 0.3, type: "sawtooth", gain: 0.035, delay: 0.17 });
+  }
+  jackpot() {
+    [523, 659, 784, 1046].forEach((f, i) =>
+      this._tone({ freq: f, dur: 0.09, type: "square", gain: 0.03, delay: i * 0.06 })
+    );
+  }
+  comboUp() {
+    this._tone({ freq: 600, end: 1300, dur: 0.09, type: "triangle", gain: 0.035 });
+  }
+
   /* low forge drone while the gate is on screen */
   startHum() {
     if (!this.enabled || !this.ctx || this.hum) return;

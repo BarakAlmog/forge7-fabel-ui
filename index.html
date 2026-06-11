@@ -46,6 +46,7 @@
       <a href="#systems">Systems</a>
       <a href="#protocol">Protocol</a>
       <a href="#deployments">Results</a>
+      <a href="#drill">The Floor</a>
       <a href="#terms">Terms</a>
     </nav>
     <div class="bar__status">
@@ -443,52 +444,42 @@
       </div>
     </section>
 
-    <!-- ============ MODULE 05 · THE ASSEMBLY FLOOR ============
-         Parked for redesign - the pipeline game is hidden until we
-         revisit it. Code lives in js/pipeline.js. -->
-    <section class="mod wrap" id="drill" aria-labelledby="drillTitle" hidden>
+    <!-- ============ MODULE 05 · MANUAL MODE (whack-a-task) ============ -->
+    <section class="mod wrap" id="drill" aria-labelledby="drillTitle">
       <header class="mod__head" data-reveal>
         <span class="mod__id">MODULE 05</span>
         <span class="mod__rule" aria-hidden="true"></span>
-        <span class="mod__name">THE TRAINING FLOOR</span>
+        <span class="mod__name">MANUAL MODE</span>
       </header>
-      <h2 class="mod__title" id="drillTitle" data-reveal>Build <em>the machine.</em></h2>
+      <h2 class="mod__title" id="drillTitle" data-reveal>Whack the <em>busywork.</em></h2>
       <p class="mod__sub" data-reveal>
-        Records pour from the intake. The archive only takes them <b>validated</b>;
-        spam wants the shredder. Place the parts, press <b>RUN</b>, and keep your
-        hands off - that’s the whole product. Or press <b>AUTO-DESIGN</b> and watch
-        the fleet do your job in under a second.
+        Your week, compressed to 45 seconds: tasks pop out of the floor, you put
+        them down. Whack everything - <b>except the coffee, a human is holding it</b>.
+        Then watch FLEET MODE take the same shift.
       </p>
 
-      <div class="pipe panel" data-reveal>
+      <div class="wk panel" data-reveal>
         <div class="console__bar">
           <span class="console__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span class="console__name">SIM-PIPE // ASSEMBLY FLOOR 7</span>
-          <span class="pipe__level" id="pipeLevel">LEVEL I / III</span>
+          <span class="console__name">SIM-WHACK // OPS FLOOR 7</span>
+          <span class="wk__shift">45-SECOND SHIFT</span>
         </div>
 
-        <div class="pipe__layout">
-          <div class="pipe__stage">
-            <div class="pipe__board" id="pipeBoard"
-              role="application"
-              aria-label="Pipeline builder. Select a part from the tray, then click a board cell to place it. Click a placed router to rotate it. Press RUN to start the flow."></div>
+        <div class="wk__layout">
+          <div class="wk__board" id="wkBoard" role="application"
+            aria-label="Whack-a-task. Tasks pop up on a three by three floor; click or tap them before they escalate. Do not whack the coffee mug.">
+            <div class="wk__overlay" id="wkOverlay" hidden></div>
           </div>
 
-          <aside class="pipe__side">
-            <p class="pipe__status" id="pipeStatus" aria-live="polite"></p>
-            <div class="pipe__tray" id="pipeTray" aria-label="Parts tray"></div>
-            <p class="pipe__note" id="pipeNote" aria-live="polite"></p>
-            <div class="pipe__actions">
-              <button class="btn btn--solid pipe__btn" id="pipeRun" type="button">RUN ▸</button>
-              <button class="btn btn--ghost pipe__btn" id="pipeClear" type="button">Clear</button>
-              <button class="btn btn--ghost pipe__btn" id="pipeAuto" type="button">⚡ Auto-design</button>
-              <button class="btn btn--solid pipe__btn" id="pipeNext" type="button" hidden>Next level ▸</button>
+          <aside class="wk__side">
+            <div class="wk__hud">
+              <div><span class="tele__label">TIME</span><b id="wkTime">45s</b></div>
+              <div><span class="tele__label">SCORE</span><b id="wkScore">0</b></div>
+              <div><span class="tele__label">ESCALATED</span><b id="wkEsc">0</b></div>
+              <div><span class="tele__label">COMBO</span><b id="wkStreak">×1</b></div>
             </div>
-            <p class="pipe__keys" aria-hidden="true">SELECT A PART · CLICK TO PLACE · CLICK A ROUTER TO ROTATE</p>
-            <div class="pipe__scores" id="pipeScores" hidden>
-              <span class="tele__label">FLOOR RECORDS · THIS LEVEL</span>
-              <ol></ol>
-            </div>
+            <p class="wk__note">Every whack here is a task someone once did by hand,
+            forever. The fleet finds this exhibit quaint.</p>
           </aside>
         </div>
       </div>
@@ -630,7 +621,7 @@
       <div class="foot__row">
         <span>FORGE7 // AUTONOMOUS OPERATIONS</span>
         <nav class="foot__nav" aria-label="Footer">
-          <a href="#operations">Operations</a><a href="#systems">Systems</a><a href="#protocol">Protocol</a><a href="#deployments">Results</a><a href="#terms">Terms</a><a href="#access">Access</a>
+          <a href="#operations">Operations</a><a href="#systems">Systems</a><a href="#protocol">Protocol</a><a href="#deployments">Results</a><a href="#drill">The Floor</a><a href="#terms">Terms</a><a href="#access">Access</a>
         </nav>
       </div>
       <div class="foot__row foot__row--fine">

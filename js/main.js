@@ -3,7 +3,7 @@
    Boot → gate → live feed → telemetry. GSAP + one honest fleet.
    ============================================================ */
 import { createGateScene } from "./gate.js";
-import { initPipeline } from "./pipeline.js";
+import { initWhack } from "./whack.js";
 import { SoundDeck } from "./sound.js";
 import { initDrone } from "./drone.js";
 import { initHaze } from "./haze.js";
@@ -679,19 +679,7 @@ soundToggle();
 const feedline = (sys, act, res, warn = false) =>
   document.dispatchEvent(new CustomEvent("forge7:feedline", { detail: { sys, act, res, warn } }));
 
-// MODULE 05 is parked for redesign; init only if the section is unhidden
-if (!$("#drill").hidden) {
-  window.__forge7Pipeline = initPipeline({
-    reduceMotion: REDUCE,
-    onFeedLine: feedline,
-    audio: {
-      tick: () => sound.tick(),
-      clink: () => sound.clink(),
-      thud: () => sound.thud(),
-      win: () => sound.win(),
-    },
-  });
-}
+window.__forge7Whack = initWhack({ reduceMotion: REDUCE, onFeedLine: feedline, sound });
 
 const drone = initDrone({ reduceMotion: REDUCE, onFeedLine: feedline });
 
