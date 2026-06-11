@@ -794,7 +794,196 @@ a:hover { color: var(--phos); }
   .clause__id { display: none; }
 }
 
-/* ---- module 06: access (terminal form) ---------------------------------- */
+/* ---- module 05: the training floor (sokoban drill) ----------------------- */
+.drill { max-width: 1100px; }
+.drill__level {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--phos);
+}
+.drill__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(240px, 0.85fr);
+  gap: clamp(18px, 3vw, 36px);
+  padding: clamp(18px, 2.6vw, 32px);
+  align-items: start;
+}
+.drill__stage {
+  appearance: none;
+  border: 1px solid rgba(125, 255, 205, 0.18);
+  background: rgba(4, 7, 9, 0.7);
+  padding: clamp(10px, 1.6vw, 18px);
+  cursor: pointer;
+  position: relative;
+  display: block;
+  width: 100%;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.drill__stage.is-live {
+  border-color: rgba(61, 255, 192, 0.55);
+  box-shadow: 0 0 36px -10px rgba(61, 255, 192, 0.3);
+  cursor: default;
+}
+.drill__stage:focus-visible { outline: 1.5px dashed var(--phos); outline-offset: 6px; }
+.drill__takeover {
+  position: absolute;
+  inset: auto 0 -1px;
+  padding: 8px;
+  background: rgba(61, 255, 192, 0.08);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  color: var(--phos);
+  transition: opacity 0.25s;
+}
+.drill__stage.is-live .drill__takeover { opacity: 0; }
+.drill__board {
+  position: relative;
+  width: 100%;
+  /* aspect-ratio set per level from JS */
+}
+.drill__board > div { position: absolute; }
+.drill__floor {
+  border: 1px solid rgba(122, 255, 210, 0.05);
+}
+.drill__wall {
+  background: linear-gradient(180deg, #131C22, #0A1014);
+  border: 1px solid rgba(125, 255, 205, 0.1);
+  box-shadow: inset 0 2px 0 rgba(125, 255, 205, 0.06);
+}
+.drill__slot {
+  border: 1.5px dashed rgba(61, 255, 192, 0.55);
+  outline: 0;
+  box-shadow: inset 0 0 14px rgba(61, 255, 192, 0.12);
+  scale: 0.78;
+}
+.drill__crate {
+  background: linear-gradient(180deg, rgba(255, 106, 0, 0.22), rgba(255, 106, 0, 0.1));
+  border: 1.5px solid var(--heat);
+  box-shadow: 0 0 18px -6px rgba(255, 106, 0, 0.55);
+  scale: 0.86;
+  z-index: 2;
+}
+/* NOTE: bars are absolute so their % resolves against the crate,
+   not the board (padding-% would resolve against the board). */
+.drill__crate i {
+  position: absolute;
+  left: 22%;
+  right: 22%;
+  height: 2px;
+  background: rgba(255, 180, 84, 0.8);
+}
+.drill__crate i:first-child { top: 36%; }
+.drill__crate i:last-child { top: 58%; }
+.drill__crate.is-slotted {
+  background: linear-gradient(180deg, rgba(61, 255, 192, 0.2), rgba(61, 255, 192, 0.08));
+  border-color: var(--phos);
+  box-shadow: 0 0 22px -4px rgba(61, 255, 192, 0.6);
+}
+.drill__crate.is-slotted i { background: rgba(61, 255, 192, 0.8); }
+.drill__bot {
+  z-index: 3;
+  display: grid;
+  place-items: center;
+}
+.drill__bot-ring {
+  position: absolute;
+  width: 64%;
+  height: 64%;
+  border: 2px solid var(--cyan);
+  border-radius: 50%;
+  box-shadow: 0 0 16px -2px rgba(113, 230, 255, 0.7);
+  animation: bot-idle 2.2s ease-in-out infinite;
+}
+.drill__bot-core {
+  width: 18%;
+  height: 18%;
+  border-radius: 50%;
+  background: var(--cyan);
+}
+@keyframes bot-idle { 50% { transform: scale(0.92); } }
+.drill.is-auto .drill__bot-ring, .drill__board.is-auto .drill__bot-ring {
+  border-color: var(--heat);
+  box-shadow: 0 0 22px -2px rgba(255, 106, 0, 0.9);
+  animation-duration: 0.5s;
+}
+.drill__board.is-auto .drill__bot-core { background: var(--heat); }
+.drill__board.is-won { animation: floor-won 0.9s ease-out; }
+@keyframes floor-won {
+  0% { filter: brightness(1); }
+  18% { filter: brightness(1.9) saturate(1.4); }
+  100% { filter: brightness(1); }
+}
+
+.drill__side { display: grid; gap: 16px; align-content: start; }
+.drill__hud {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.drill__hud > div {
+  display: grid;
+  gap: 6px;
+  border: 1px solid rgba(125, 255, 205, 0.14);
+  padding: 12px 14px;
+}
+.drill__stat {
+  font-family: var(--font-mono);
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+  font-weight: 600;
+  color: var(--phos);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.drill__note {
+  font-size: 0.95rem;
+  color: var(--dim);
+  min-height: 4.2em;
+}
+.drill__note a { color: var(--phos); text-decoration: underline; text-underline-offset: 3px; }
+.drill__actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.drill__btn { padding: 0.7em 1.1em; font-size: 10.5px; }
+.drill__keys {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--dimmer);
+}
+.drill__pad {
+  display: none;
+  grid-template-areas: ". u ." "l d r";
+  gap: 8px;
+  justify-content: start;
+}
+.drill__pad button {
+  width: 52px;
+  height: 46px;
+  background: rgba(61, 255, 192, 0.06);
+  border: 1px solid rgba(61, 255, 192, 0.35);
+  color: var(--phos);
+  font-size: 14px;
+  cursor: pointer;
+}
+.drill__pad button:active { background: rgba(61, 255, 192, 0.2); }
+.drill__pad button[data-drill-dir="U"] { grid-area: u; }
+.drill__pad button[data-drill-dir="L"] { grid-area: l; }
+.drill__pad button[data-drill-dir="D"] { grid-area: d; }
+.drill__pad button[data-drill-dir="R"] { grid-area: r; }
+
+@media (max-width: 880px) {
+  .drill__layout { grid-template-columns: 1fr; }
+  .drill__pad { display: grid; }
+  .drill__keys { display: none; }
+  .drill__note { min-height: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .drill__bot-ring { animation: none; }
+  .drill__board.is-won { animation: none; }
+}
+
+/* ---- module 07: access (terminal form) ---------------------------------- */
 .term { max-width: 980px; }
 .term__sess {
   margin-left: auto;

@@ -3,6 +3,7 @@
    Boot → gate → live feed → telemetry. GSAP + one honest fleet.
    ============================================================ */
 import { createGateScene } from "./gate.js";
+import { initDrill } from "./drill.js";
 
 document.documentElement.classList.add("js");
 history.scrollRestoration = "manual";
@@ -12,6 +13,7 @@ if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") {
   throw new Error("FORGE7 // GSAP failed to load. Page falls back to static mode.");
 }
 gsap.registerPlugin(ScrollTrigger);
+if (typeof ScrambleTextPlugin !== "undefined") gsap.registerPlugin(ScrambleTextPlugin);
 
 const REDUCE = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const $ = (sel, ctx = document) => ctx.querySelector(sel);
@@ -260,6 +262,12 @@ function opsFeed() {
 
   new IntersectionObserver((entries) => (visible = entries[0].isIntersecting), { threshold: 0 })
     .observe(feed);
+
+  // other modules (the training drill) can report into the fleet feed
+  document.addEventListener("forge7:feedline", (e) => {
+    const { sys, act, res } = e.detail;
+    push(sys, act, res);
+  });
 }
 
 /* ------------------------------------------------------------
@@ -279,6 +287,23 @@ function reveals() {
       scrollTrigger: { trigger: el, start: "top 88%", once: true },
     });
   });
+
+  // module names decode themselves as they arrive
+  if (!REDUCE && typeof ScrambleTextPlugin !== "undefined") {
+    $$(".mod__name").forEach((el) => {
+      const original = el.textContent;
+      ScrollTrigger.create({
+        trigger: el,
+        start: "top 90%",
+        once: true,
+        onEnter: () =>
+          gsap.to(el, {
+            duration: 1.1,
+            scrambleText: { text: original, chars: "▮▯/\\_0147", speed: 0.4 },
+          }),
+      });
+    });
+  }
 }
 
 /* ------------------------------------------------------------
@@ -515,6 +540,13 @@ overdrive();
 anchors();
 coordsReadout();
 furniture();
+
+const drill = initDrill({
+  reduceMotion: REDUCE,
+  onFeedLine: (sys, act, res) =>
+    document.dispatchEvent(new CustomEvent("forge7:feedline", { detail: { sys, act, res } })),
+});
+window.__forge7Drill = drill; // console tinkerers welcome
 
 window.addEventListener("load", () => {
   document.fonts.ready.then(() => ScrollTrigger.refresh());

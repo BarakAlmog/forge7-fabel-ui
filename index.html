@@ -46,6 +46,7 @@
       <a href="#systems">Systems</a>
       <a href="#protocol">Protocol</a>
       <a href="#deployments">Results</a>
+      <a href="#drill">Drill</a>
       <a href="#terms">Terms</a>
     </nav>
     <div class="bar__status">
@@ -438,10 +439,62 @@
       </div>
     </section>
 
-    <!-- ============ MODULE 05 · TERMS ============ -->
-    <section class="mod wrap" id="terms" aria-labelledby="termsTitle">
+    <!-- ============ MODULE 05 · THE TRAINING FLOOR ============ -->
+    <section class="mod wrap" id="drill" aria-labelledby="drillTitle">
       <header class="mod__head" data-reveal>
         <span class="mod__id">MODULE 05</span>
+        <span class="mod__rule" aria-hidden="true"></span>
+        <span class="mod__name">THE TRAINING FLOOR</span>
+      </header>
+      <h2 class="mod__title" id="drillTitle" data-reveal>Feel <em>the chore.</em></h2>
+      <p class="mod__sub" data-reveal>
+        Before the fleet takes a job, a human maps it by hand - so here’s a taste.
+        Misplaced records litter the floor. Push every crate onto its slot.
+        Then press <b>AUTO-RUN</b> and watch the machine be insufferable about it.
+      </p>
+
+      <div class="drill panel" data-reveal>
+        <div class="console__bar">
+          <span class="console__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="console__name">SIM-SOKO // WAREHOUSE FLOOR 7</span>
+          <span class="drill__level" id="drillLevel">LEVEL I / III</span>
+        </div>
+
+        <div class="drill__layout">
+          <button class="drill__stage" id="drillStage" type="button"
+            aria-label="Sokoban training drill. Use arrow keys or W A S D to push crates onto slots. Z undoes, R resets.">
+            <div class="drill__board" id="drillBoard"></div>
+            <span class="drill__takeover" aria-hidden="true">CLICK / TAP TO TAKE CONTROL</span>
+          </button>
+
+          <aside class="drill__side">
+            <div class="drill__hud">
+              <div><span class="tele__label">MOVES</span><span class="drill__stat" id="drillMoves">000</span></div>
+              <div><span class="tele__label">PUSHES</span><span class="drill__stat" id="drillPushes">00</span></div>
+            </div>
+            <p class="drill__note" id="drillNote" aria-live="polite"></p>
+            <div class="drill__actions">
+              <button class="btn btn--ghost drill__btn" id="drillUndo" type="button">Undo</button>
+              <button class="btn btn--ghost drill__btn" id="drillReset" type="button">Reset</button>
+              <button class="btn btn--solid drill__btn" id="drillAuto" type="button">Auto-run ▸</button>
+              <button class="btn btn--solid drill__btn" id="drillNext" type="button" hidden>Next level ▸</button>
+            </div>
+            <p class="drill__keys" aria-hidden="true">ARROWS / WASD · Z UNDO · R RESET · SWIPE ON TOUCH</p>
+            <div class="drill__pad" aria-hidden="true">
+              <button data-drill-dir="U" type="button" tabindex="-1">▲</button>
+              <button data-drill-dir="L" type="button" tabindex="-1">◀</button>
+              <button data-drill-dir="D" type="button" tabindex="-1">▼</button>
+              <button data-drill-dir="R" type="button" tabindex="-1">▶</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MODULE 06 · TERMS ============ -->
+    <section class="mod wrap" id="terms" aria-labelledby="termsTitle">
+      <header class="mod__head" data-reveal>
+        <span class="mod__id">MODULE 06</span>
         <span class="mod__rule" aria-hidden="true"></span>
         <span class="mod__name">TERMS OF ENGAGEMENT</span>
       </header>
@@ -507,10 +560,10 @@
       </ol>
     </section>
 
-    <!-- ============ MODULE 06 · ACCESS ============ -->
+    <!-- ============ MODULE 07 · ACCESS ============ -->
     <section class="mod wrap" id="access" aria-labelledby="accessTitle">
       <header class="mod__head" data-reveal>
-        <span class="mod__id">MODULE 06</span>
+        <span class="mod__id">MODULE 07</span>
         <span class="mod__rule" aria-hidden="true"></span>
         <span class="mod__name">REQUEST ACCESS</span>
       </header>
@@ -575,7 +628,7 @@
       <div class="foot__row">
         <span>FORGE7 // AUTONOMOUS OPERATIONS</span>
         <nav class="foot__nav" aria-label="Footer">
-          <a href="#operations">Operations</a><a href="#systems">Systems</a><a href="#protocol">Protocol</a><a href="#deployments">Results</a><a href="#terms">Terms</a><a href="#access">Access</a>
+          <a href="#operations">Operations</a><a href="#systems">Systems</a><a href="#protocol">Protocol</a><a href="#deployments">Results</a><a href="#drill">Drill</a><a href="#terms">Terms</a><a href="#access">Access</a>
         </nav>
       </div>
       <div class="foot__row foot__row--fine">
@@ -590,6 +643,7 @@
 
   <script src="js/vendor/gsap.min.js"></script>
   <script src="js/vendor/ScrollTrigger.min.js"></script>
+  <script src="js/vendor/ScrambleTextPlugin.min.js"></script>
   <script type="module" src="js/main.js"></script>
 </body>
 </html>
