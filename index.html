@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FORGE7 // Autonomous Operations</title>
+  <meta name="description" content="Forge7 is an autonomous-operations agency. We build self-running systems for the work your team shouldn't be doing - then we run them forever. Chaos in. Order out." />
+  <meta name="theme-color" content="#05080A" />
+  <meta property="og:title" content="FORGE7 // Autonomous Operations" />
+  <meta property="og:description" content="Chaos in. Order out. Self-running systems for the work your team shouldn't be doing." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://barakalmog.github.io/forge7-fabel-ui/" />
+  <meta property="og:image" content="https://barakalmog.github.io/forge7-fabel-ui/assets/og.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://barakalmog.github.io/forge7-fabel-ui/assets/og.jpg" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2305080A'/%3E%3Ccircle cx='32' cy='32' r='22' fill='none' stroke='%233DFFC0' stroke-width='3'/%3E%3Ccircle cx='32' cy='32' r='9' fill='none' stroke='%23FF6A00' stroke-width='3'/%3E%3Cpath d='M32 2v8M32 54v8M2 32h8M54 32h8' stroke='%233DFFC0' stroke-width='3'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#access">Skip to access request</a>
+
+  <!-- boot sequence -->
+  <div class="boot" id="boot" role="presentation">
+    <div class="boot__win">
+      <pre class="boot__lines" id="bootLines" aria-hidden="true"></pre>
+      <div class="boot__bar" aria-hidden="true"><i id="bootBar"></i></div>
+      <p class="boot__hint" aria-hidden="true">CLICK TO SKIP</p>
+    </div>
+  </div>
+
+  <!-- console bar -->
+  <header class="bar" id="top">
+    <a class="bar__brand" href="#top" aria-label="Forge7, home">
+      <svg class="bar__mark" viewBox="0 0 36 36" aria-hidden="true">
+        <circle cx="18" cy="18" r="12.5" fill="none" stroke="currentColor" stroke-width="2"/>
+        <circle cx="18" cy="18" r="5" fill="none" stroke="var(--heat)" stroke-width="2"/>
+        <path d="M18 1.5v6M18 28.5v6M1.5 18h6M28.5 18h6" stroke="currentColor" stroke-width="2"/>
+      </svg>
+      <span class="bar__word">FORGE7<em>//OPS</em></span>
+    </a>
+    <nav class="bar__nav" aria-label="Modules">
+      <a href="#operations">Operations</a>
+      <a href="#systems">Systems</a>
+      <a href="#protocol">Protocol</a>
+      <a href="#deployments">Results</a>
+      <a href="#terms">Terms</a>
+    </nav>
+    <div class="bar__status">
+      <span class="bar__clock" id="utcClock">--:--:--<i>UTC</i></span>
+      <span class="bar__dot" aria-hidden="true"></span>
+      <span class="bar__nominal">NOMINAL</span>
+      <a class="btn btn--solid bar__cta" href="#access">Request&nbsp;access</a>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ MODULE 00 · THE GATE (hero) ============ -->
+    <section class="hero" aria-labelledby="heroTitle">
+      <canvas class="hero__canvas" id="gateCanvas" aria-hidden="true"></canvas>
+      <div class="hero__vignette" aria-hidden="true"></div>
+
+      <div class="hud" aria-hidden="true">
+        <i class="hud__c hud__c--tl"></i><i class="hud__c hud__c--tr"></i>
+        <i class="hud__c hud__c--bl"></i><i class="hud__c hud__c--br"></i>
+        <span class="hud__tag hud__tag--tl">FIG.00 // THE GATE</span>
+        <span class="hud__tag hud__tag--tr">FLOW: NOMINAL</span>
+        <span class="hud__tag hud__tag--bl" id="coordsRead">CUR X:0000 Y:0000</span>
+        <span class="hud__tag hud__tag--br">DPR-LOCKED // 60FPS TARGET</span>
+      </div>
+
+      <div class="hero__inner">
+        <p class="hero__kicker" data-boot-reveal>
+          <span class="hero__kdot" aria-hidden="true"></span>
+          AUTONOMOUS OPERATIONS AGENCY&nbsp;&nbsp;//&nbsp;&nbsp;FLEET ONLINE
+        </p>
+        <h1 class="hero__title" id="heroTitle">
+          <span class="line"><span class="line__in">CHAOS IN.</span></span>
+          <span class="line line--order"><span class="line__in">ORDER OUT.</span></span>
+        </h1>
+        <p class="hero__sub" data-boot-reveal>
+          We build self-running systems for the work your team shouldn’t be doing,
+          then we run them forever. Since you opened this page the Forge7 fleet has
+          executed <b class="hero__live"><span id="heroTasks">0</span> tasks</b>.
+          Nobody was in the room.
+        </p>
+        <div class="hero__cta" data-boot-reveal>
+          <a class="btn btn--solid" href="#access">Request access</a>
+          <a class="btn btn--ghost" href="#operations">Watch the fleet ↓</a>
+        </div>
+      </div>
+
+      <div class="tele" data-boot-reveal>
+        <div class="tele__cell">
+          <span class="tele__label">TASKS TODAY</span>
+          <span class="tele__val" id="mTasksToday">000000</span>
+        </div>
+        <div class="tele__cell">
+          <span class="tele__label">HOURS RETURNED / WK</span>
+          <span class="tele__val tele__val--cyan" id="mHours">0000</span>
+        </div>
+        <div class="tele__cell">
+          <span class="tele__label">SYSTEMS IN PRODUCTION</span>
+          <span class="tele__val" id="mSystems">247</span>
+        </div>
+        <div class="tele__cell">
+          <span class="tele__label">FLEET UPTIME</span>
+          <span class="tele__val tele__val--cyan" id="mUptime">99.97%</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MODULE 01 · LIVE OPERATIONS ============ -->
+    <section class="mod wrap" id="operations" aria-labelledby="opsTitle">
+      <header class="mod__head" data-reveal>
+        <span class="mod__id">MODULE 01</span>
+        <span class="mod__rule" aria-hidden="true"></span>
+        <span class="mod__name">LIVE OPERATIONS</span>
+      </header>
+      <h2 class="mod__title" id="opsTitle" data-reveal>The fleet, <em>right now.</em></h2>
+      <p class="mod__sub" data-reveal>
+        A live simulation of a Forge7 production feed. The real ones run inside client
+        walls - your data never visits us. <span class="mod__cite">CLAUSE 05</span>
+      </p>
+
+      <div class="ops">
+        <div class="console panel" data-reveal>
+          <div class="console__bar">
+            <span class="console__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="console__name">OPS-FEED // FLEET-WIDE</span>
+            <span class="console__live"><i aria-hidden="true"></i>LIVE</span>
+          </div>
+          <ol class="console__feed" id="opsFeed" aria-hidden="true"></ol>
+          <div class="console__foot" aria-hidden="true">
+            <span class="console__cursor">▮</span>
+            <span>awaiting next cycle…</span>
+          </div>
+        </div>
+
+        <aside class="ops__side">
+          <div class="stat panel" data-reveal>
+            <span class="stat__label">QUEUE DEPTH</span>
+            <span class="stat__val" id="queueDepth">07</span>
+            <span class="stat__note">items awaiting pickup</span>
+          </div>
+          <div class="stat panel" data-reveal>
+            <span class="stat__label">MEAN CYCLE TIME</span>
+            <span class="stat__val stat__val--cyan" id="cycleTime">1.8s</span>
+            <span class="stat__note">intake → done</span>
+          </div>
+          <div class="stat panel" data-reveal>
+            <span class="stat__label">HUMAN INTERVENTIONS TODAY</span>
+            <span class="stat__val stat__val--zero">0</span>
+            <span class="stat__note">as designed</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============ MODULE 02 · SYSTEMS ============ -->
+    <section class="mod wrap" id="systems" aria-labelledby="sysTitle">
+      <header class="mod__head" data-reveal>
+        <span class="mod__id">MODULE 02</span>
+        <span class="mod__rule" aria-hidden="true"></span>
+        <span class="mod__name">SYSTEMS // WHAT WE DEPLOY</span>
+      </header>
+      <h2 class="mod__title" id="sysTitle" data-reveal>Machines with <em>job titles.</em></h2>
+      <p class="mod__sub" data-reveal>
+        Every system is bespoke. These are the recurring species.
+      </p>
+
+      <div class="sys__grid">
+
+        <article class="sys panel" data-reveal>
+          <header class="sys__head">
+            <span class="sys__id">SYS-01</span>
+            <span class="sys__deployed">DEPLOYED 31×</span>
+          </header>
+          <svg class="sys__fig" viewBox="0 0 280 150" aria-hidden="true">
+            <g stroke="var(--dim-line)" fill="none" stroke-width="1.5">
+              <rect x="18" y="26" width="34" height="44" rx="2"/>
+              <rect x="26" y="40" width="34" height="44" rx="2"/>
+              <rect x="34" y="54" width="34" height="44" rx="2"/>
+              <path d="M40 62h22M40 70h22M40 78h14"/>
+            </g>
+            <path class="flow" d="M76 74h36" stroke="var(--heat)" stroke-width="1.5" fill="none"/>
+            <path d="M118 46l44 18v20l-44 18z" fill="none" stroke="var(--phos)" stroke-width="1.5"/>
+            <path class="flow flow--slow" d="M168 74h34" stroke="var(--phos)" stroke-width="1.5" fill="none"/>
+            <g stroke="var(--cyan)" fill="none" stroke-width="1.5">
+              <ellipse cx="232" cy="52" rx="26" ry="9"/>
+              <path d="M206 52v44c0 5 11.6 9 26 9s26-4 26-9V52"/>
+              <path d="M206 74c0 5 11.6 9 26 9s26-4 26-9" opacity="0.6"/>
+            </g>
+            <text x="18" y="130" class="sys__figlabel">INBOUND CHAOS → STRUCTURED RECORDS</text>
+          </svg>
+          <h3 class="sys__name">Ingestion Engine</h3>
+          <p class="sys__desc">Swallows inbound paperwork - invoices, POs, forms - and files it as clean records. Eleven hostile formats and counting.</p>
+          <dl class="sys__specs">
+            <div><dt>INPUT</dt><dd>PDFs, scans, chaos</dd></div>
+            <div><dt>OUTPUT</dt><dd>Structured records, reconciled</dd></div>
+            <div><dt>RECOVERS</dt><dd>≈ 14 hrs / wk</dd></div>
+            <div><dt>STATUS</dt><dd class="sys__status">INSATIABLE</dd></div>
+          </dl>
+        </article>
+
+        <article class="sys panel" data-reveal>
+          <header class="sys__head">
+            <span class="sys__id">SYS-02</span>
+            <span class="sys__deployed">DEPLOYED 24×</span>
+          </header>
+          <svg class="sys__fig" viewBox="0 0 280 150" aria-hidden="true">
+            <g stroke="var(--dim-line)" fill="none" stroke-width="1.5">
+              <circle cx="120" cy="68" r="46"/>
+              <circle cx="120" cy="68" r="30"/>
+              <circle cx="120" cy="68" r="14"/>
+              <path d="M120 16v104M68 68h104"/>
+            </g>
+            <g class="sweep">
+              <path d="M120 68 158 32" stroke="var(--phos)" stroke-width="1.5"/>
+              <path d="M120 68 158 32 150 56z" fill="var(--phos)" opacity="0.12"/>
+            </g>
+            <circle class="blip" cx="146" cy="46" r="4" fill="var(--heat)"/>
+            <g stroke="var(--cyan)" fill="none" stroke-width="1.5">
+              <circle cx="222" cy="68" r="13"/>
+              <path d="M222 49v-8M222 95v-8M203 68h-8M249 68h-8"/>
+            </g>
+            <path class="flow" d="M166 68h40" stroke="var(--phos)" stroke-width="1.5" fill="none"/>
+            <text x="18" y="130" class="sys__figlabel">TARGET ACQUIRED → SIGNATURE SECURED</text>
+          </svg>
+          <h3 class="sys__name">Chaser Protocol</h3>
+          <p class="sys__desc">Pursues signatures, approvals and unpaid invoices with infinite patience and perfect manners.</p>
+          <dl class="sys__specs">
+            <div><dt>INPUT</dt><dd>Silence</dd></div>
+            <div><dt>OUTPUT</dt><dd>Signatures, settled accounts</dd></div>
+            <div><dt>RECOVERS</dt><dd>≈ 6 hrs / wk</dd></div>
+            <div><dt>STATUS</dt><dd class="sys__status">RELENTLESS, POLITE</dd></div>
+          </dl>
+        </article>
+
+        <article class="sys panel" data-reveal>
+          <header class="sys__head">
+            <span class="sys__id">SYS-03</span>
+            <span class="sys__deployed">DEPLOYED 19×</span>
+          </header>
+          <svg class="sys__fig" viewBox="0 0 280 150" aria-hidden="true">
+            <path class="flow" d="M18 38c40 0 52 26 92 28" stroke="var(--dim-line)" stroke-width="1.5" fill="none"/>
+            <path class="flow flow--slow" d="M18 70h92" stroke="var(--dim-line)" stroke-width="1.5" fill="none"/>
+            <path class="flow" d="M18 102c40 0 52-26 92-28" stroke="var(--dim-line)" stroke-width="1.5" fill="none"/>
+            <circle cx="124" cy="70" r="11" fill="none" stroke="var(--phos)" stroke-width="1.5"/>
+            <circle cx="124" cy="70" r="3.5" fill="var(--phos)"/>
+            <path class="flow flow--slow" d="M138 70h44" stroke="var(--phos)" stroke-width="1.5" fill="none"/>
+            <g stroke="var(--cyan)" fill="none" stroke-width="1.5">
+              <rect x="188" y="38" width="52" height="64" rx="2"/>
+              <path d="M198 54h32M198 64h32M198 74h32M198 84h20"/>
+            </g>
+            <circle cx="240" cy="38" r="10" fill="var(--bg)" stroke="var(--heat)" stroke-width="1.5"/>
+            <text x="236" y="42" class="sys__figlabel" fill="var(--heat)">07</text>
+            <text x="18" y="130" class="sys__figlabel">SIX SOURCES → ONE REPORT, 06:00 SHARP</text>
+          </svg>
+          <h3 class="sys__name">Synth Reporter</h3>
+          <p class="sys__desc">Reconciles six systems that disagree and writes the Monday report while Sunday sleeps.</p>
+          <dl class="sys__specs">
+            <div><dt>INPUT</dt><dd>Six sources of “truth”</dd></div>
+            <div><dt>OUTPUT</dt><dd>One report, 06:00 sharp</dd></div>
+            <div><dt>RECOVERS</dt><dd>≈ 4 hrs / wk, plus Sundays</dd></div>
+            <div><dt>STATUS</dt><dd class="sys__status">CLAIRVOYANT</dd></div>
+          </dl>
+        </article>
+
+        <article class="sys panel" data-reveal>
+          <header class="sys__head">
+            <span class="sys__id">SYS-04</span>
+            <span class="sys__deployed">DEPLOYED 27×</span>
+          </header>
+          <svg class="sys__fig" viewBox="0 0 280 150" aria-hidden="true">
+            <g stroke="var(--dim-line)" fill="none" stroke-width="1.5">
+              <rect x="22" y="50" width="44" height="32" rx="2"/>
+              <path d="M22 50l22 14 22-14"/>
+            </g>
+            <path class="flow" d="M70 66c30 0 36-26 64-28" stroke="var(--phos)" stroke-width="1.5" fill="none"/>
+            <path class="flow flow--slow" d="M70 66h64" stroke="var(--phos)" stroke-width="1.5" fill="none"/>
+            <path class="flow" d="M70 66c30 0 36 26 64 28" stroke="var(--phos)" stroke-width="1.5" fill="none"/>
+            <g fill="none" stroke="var(--cyan)" stroke-width="1.5">
+              <circle cx="148" cy="38" r="9"/>
+              <circle cx="148" cy="66" r="9"/>
+              <circle cx="148" cy="94" r="9"/>
+            </g>
+            <path class="flow flow--slow" d="M160 38h36M160 66h36M160 94h36" stroke="var(--dim-line)" stroke-width="1.5" fill="none"/>
+            <text x="204" y="42" class="sys__figlabel" fill="var(--phos)">ROUTED ✓</text>
+            <text x="204" y="70" class="sys__figlabel" fill="var(--cyan)">DRAFTED ▸</text>
+            <text x="204" y="98" class="sys__figlabel" fill="var(--warn)">FLAGGED ⚑</text>
+            <text x="18" y="130" class="sys__figlabel">400 EMAILS → ROUTED BEFORE COFFEE</text>
+          </svg>
+          <h3 class="sys__name">Triage Network</h3>
+          <p class="sys__desc">Reads four hundred inbound emails before coffee, routes every thread, drafts the replies.</p>
+          <dl class="sys__specs">
+            <div><dt>INPUT</dt><dd>The inbox, unfiltered</dd></div>
+            <div><dt>OUTPUT</dt><dd>Routed, drafted, calm</dd></div>
+            <div><dt>RECOVERS</dt><dd>≈ 11 hrs / wk, team-wide</dd></div>
+            <div><dt>STATUS</dt><dd class="sys__status">UNFLAPPABLE</dd></div>
+          </dl>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ============ MODULE 03 · PROTOCOL ============ -->
+    <section class="mod wrap" id="protocol" aria-labelledby="protoTitle">
+      <header class="mod__head" data-reveal>
+        <span class="mod__id">MODULE 03</span>
+        <span class="mod__rule" aria-hidden="true"></span>
+        <span class="mod__name">DEPLOYMENT PROTOCOL</span>
+      </header>
+      <h2 class="mod__title" id="protoTitle" data-reveal>Seven phases.<br /><em>One handover.</em></h2>
+
+      <div class="proto">
+        <aside class="proto__rail" aria-hidden="true">
+          <div class="proto__sticky">
+            <svg class="proto__gauge" viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="52" fill="none" stroke="var(--dim-line)" stroke-width="2"/>
+              <circle class="proto__arc" id="protoArc" cx="60" cy="60" r="52" fill="none"
+                stroke="var(--phos)" stroke-width="2.5" stroke-linecap="round"
+                stroke-dasharray="326.7" stroke-dashoffset="326.7" transform="rotate(-90 60 60)"/>
+            </svg>
+            <div class="proto__readout">
+              <span class="proto__num" id="protoNum">01</span>
+              <span class="proto__of">/ 07</span>
+            </div>
+          </div>
+        </aside>
+
+        <ol class="proto__list">
+          <li class="proto-card panel" data-phase="01" data-reveal>
+            <header><span class="proto-card__id">PHASE 01</span><span class="proto-card__t">WEEK 0–1</span></header>
+            <h3>Recon</h3>
+            <p>We embed with your team and map the operation - every input, every handoff, every sigh. The boring parts identify themselves.</p>
+          </li>
+          <li class="proto-card panel" data-phase="02" data-reveal>
+            <header><span class="proto-card__id">PHASE 02</span><span class="proto-card__t">WEEK 1</span></header>
+            <h3>Blueprint</h3>
+            <p>The system is drawn before it is built: data flows, failure modes, escalation paths. You approve every node.</p>
+          </li>
+          <li class="proto-card panel" data-phase="03" data-reveal>
+            <header><span class="proto-card__id">PHASE 03</span><span class="proto-card__t">WEEKS 2–4</span></header>
+            <h3>Build</h3>
+            <p>Weeks, not quarters. A working system early, hardened against real life: edge cases, typos, Mondays.</p>
+          </li>
+          <li class="proto-card panel" data-phase="04" data-reveal>
+            <header><span class="proto-card__id">PHASE 04</span><span class="proto-card__t">WEEKS 4–6</span></header>
+            <h3>Parallel run</h3>
+            <p>The machine works beside your team. You inspect everything it does. It does not get offended.</p>
+          </li>
+          <li class="proto-card panel" data-phase="05" data-reveal>
+            <header><span class="proto-card__id">PHASE 05</span><span class="proto-card__t">DAY 42</span></header>
+            <h3>Cutover</h3>
+            <p>The system takes the seat. Your team takes the afternoon. The keys are yours - it runs on your infrastructure.</p>
+          </li>
+          <li class="proto-card panel" data-phase="06" data-reveal>
+            <header><span class="proto-card__id">PHASE 06</span><span class="proto-card__t">FOREVER</span></header>
+            <h3>Monitor</h3>
+            <p>We watch it around the clock. Drift, breakage, upstream surprises - our problem, fixed before you notice.</p>
+          </li>
+          <li class="proto-card panel proto-card--final" data-phase="07" data-reveal>
+            <header><span class="proto-card__id">PHASE 07</span><span class="proto-card__t">ALSO FOREVER</span></header>
+            <h3>Nothing</h3>
+            <p>You do nothing. The system runs, we watch it, your Tuesdays come back. Statistically everyone’s favorite phase.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ MODULE 04 · DEPLOYMENTS ============ -->
+    <section class="mod wrap" id="deployments" aria-labelledby="depTitle">
+      <header class="mod__head" data-reveal>
+        <span class="mod__id">MODULE 04</span>
+        <span class="mod__rule" aria-hidden="true"></span>
+        <span class="mod__name">FIELD RESULTS</span>
+      </header>
+      <h2 class="mod__title" id="depTitle" data-reveal>Deployed. <em>Still running.</em></h2>
+
+      <div class="dep__grid">
+        <article class="dep panel" data-reveal>
+          <header class="dep__head">
+            <span class="dep__id">DEP-0041</span>
+            <span class="dep__sector">LOGISTICS // ROTTERDAM</span>
+          </header>
+          <div class="dep__big">
+            <span class="dep__num" data-count="14">0</span>
+            <span class="dep__unit">HRS / WK<br/>RETURNED</span>
+          </div>
+          <ul class="dep__rows">
+            <li><span>SYSTEM</span><b>Ingestion Engine</b></li>
+            <li><span>THROUGHPUT</span><b>1,400 invoices / month</b></li>
+            <li><span>UPTIME</span><b>99.97%</b></li>
+            <li><span>PAYBACK</span><b>11 weeks</b></li>
+          </ul>
+          <p class="dep__note">Accounts payable now does accounts <em>thinking</em>.</p>
+        </article>
+
+        <article class="dep panel" data-reveal>
+          <header class="dep__head">
+            <span class="dep__id">DEP-0033</span>
+            <span class="dep__sector">LEGAL // TEL AVIV</span>
+          </header>
+          <div class="dep__big">
+            <span class="dep__num" data-count="6">0</span>
+            <span class="dep__unit">HRS / WK<br/>RETURNED</span>
+          </div>
+          <ul class="dep__rows">
+            <li><span>SYSTEM</span><b>Chaser Protocol</b></li>
+            <li><span>CHASE COMPLETION</span><b>100%</b></li>
+            <li><span>AWKWARD REMINDERS, BY HUMANS</span><b>0</b></li>
+            <li><span>PAYBACK</span><b>9 weeks</b></li>
+          </ul>
+          <p class="dep__note">Partners stopped playing bad cop. The letters sign themselves.</p>
+        </article>
+
+        <article class="dep panel" data-reveal>
+          <header class="dep__head">
+            <span class="dep__id">DEP-0027</span>
+            <span class="dep__sector">WHOLESALE // LEEDS</span>
+          </header>
+          <div class="dep__big">
+            <span class="dep__num" data-count="4">0</span>
+            <span class="dep__unit">HRS / WK,<br/>PLUS SUNDAYS</span>
+          </div>
+          <ul class="dep__rows">
+            <li><span>SYSTEM</span><b>Synth Reporter</b></li>
+            <li><span>REPORT LANDS</span><b>06:00, Monday</b></li>
+            <li><span>SOURCES RECONCILED</span><b>6</b></li>
+            <li><span>SUNDAY DREAD</span><b>Deprecated</b></li>
+          </ul>
+          <p class="dep__note">The Monday meeting now starts with answers, not assembly.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ MODULE 05 · TERMS ============ -->
+    <section class="mod wrap" id="terms" aria-labelledby="termsTitle">
+      <header class="mod__head" data-reveal>
+        <span class="mod__id">MODULE 05</span>
+        <span class="mod__rule" aria-hidden="true"></span>
+        <span class="mod__name">TERMS OF ENGAGEMENT</span>
+      </header>
+      <h2 class="mod__title" id="termsTitle" data-reveal>Seven clauses. <em>No fine print.</em></h2>
+
+      <ol class="clauses">
+        <li class="clause" data-reveal>
+          <svg class="clause__check" viewBox="0 0 28 28" aria-hidden="true">
+            <rect x="2" y="2" width="24" height="24" rx="3" fill="none" stroke="var(--dim-line)" stroke-width="1.5"/>
+            <path class="clause__tick" d="M8 14.5l4.4 4.5L20.5 9" fill="none" stroke="var(--phos)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="clause__id">01</span>
+          <p><b>You own the system. Outright.</b> We build it, you keep it. No rent, no ransom, no per-seat tithe.</p>
+        </li>
+        <li class="clause" data-reveal>
+          <svg class="clause__check" viewBox="0 0 28 28" aria-hidden="true">
+            <rect x="2" y="2" width="24" height="24" rx="3" fill="none" stroke="var(--dim-line)" stroke-width="1.5"/>
+            <path class="clause__tick" d="M8 14.5l4.4 4.5L20.5 9" fill="none" stroke="var(--phos)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="clause__id">02</span>
+          <p><b>Fixed price, quoted first.</b> If we misjudge the build, that is our loss, not yours.</p>
+        </li>
+        <li class="clause" data-reveal>
+          <svg class="clause__check" viewBox="0 0 28 28" aria-hidden="true">
+            <rect x="2" y="2" width="24" height="24" rx="3" fill="none" stroke="var(--dim-line)" stroke-width="1.5"/>
+            <path class="clause__tick" d="M8 14.5l4.4 4.5L20.5 9" fill="none" stroke="var(--phos)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="clause__id">03</span>
+          <p><b>It breaks, we fix it. Free.</b> A stopped system is our shame, not your problem.</p>
+        </li>
+        <li class="clause" data-reveal>
+          <svg class="clause__check" viewBox="0 0 28 28" aria-hidden="true">
+            <rect x="2" y="2" width="24" height="24" rx="3" fill="none" stroke="var(--dim-line)" stroke-width="1.5"/>
+            <path class="clause__tick" d="M8 14.5l4.4 4.5L20.5 9" fill="none" stroke="var(--phos)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="clause__id">04</span>
+          <p><b>Tenfold or we say so.</b> If the math doesn’t favour you 10×, we tell you at recon and send you home with your budget.</p>
+        </li>
+        <li class="clause" data-reveal>
+          <svg class="clause__check" viewBox="0 0 28 28" aria-hidden="true">
+            <rect x="2" y="2" width="24" height="24" rx="3" fill="none" stroke="var(--dim-line)" stroke-width="1.5"/>
+            <path class="clause__tick" d="M8 14.5l4.4 4.5L20.5 9" fill="none" stroke="var(--phos)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="clause__id">05</span>
+          <p><b>Your data stays home.</b> Systems run inside your walls, on your keys, on your metal.</p>
+        </li>
+        <li class="clause" data-reveal>
+          <svg class="clause__check" viewBox="0 0 28 28" aria-hidden="true">
+            <rect x="2" y="2" width="24" height="24" rx="3" fill="none" stroke="var(--dim-line)" stroke-width="1.5"/>
+            <path class="clause__tick" d="M8 14.5l4.4 4.5L20.5 9" fill="none" stroke="var(--phos)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="clause__id">06</span>
+          <p><b>No dashboards.</b> You wanted your hours back, not another screen to stare at. If you ask nicely: still no.</p>
+        </li>
+        <li class="clause" data-reveal>
+          <svg class="clause__check" viewBox="0 0 28 28" aria-hidden="true">
+            <rect x="2" y="2" width="24" height="24" rx="3" fill="none" stroke="var(--dim-line)" stroke-width="1.5"/>
+            <path class="clause__tick" d="M8 14.5l4.4 4.5L20.5 9" fill="none" stroke="var(--phos)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="clause__id">07</span>
+          <p><b>We watch it forever.</b> Monitoring, maintenance, upgrades - for as long as the system serves.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ============ MODULE 06 · ACCESS ============ -->
+    <section class="mod wrap" id="access" aria-labelledby="accessTitle">
+      <header class="mod__head" data-reveal>
+        <span class="mod__id">MODULE 06</span>
+        <span class="mod__rule" aria-hidden="true"></span>
+        <span class="mod__name">REQUEST ACCESS</span>
+      </header>
+      <h2 class="mod__title" id="accessTitle" data-reveal>Three slots <em>per quarter.</em></h2>
+      <p class="mod__sub" data-reveal>
+        We take three new operations per quarter, so every system gets tended properly.
+        The queue is real. Transmit early.
+      </p>
+
+      <form class="term panel" id="accessForm" novalidate data-reveal>
+        <div class="console__bar">
+          <span class="console__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="console__name">ACCESS-REQUEST // SECURE CHANNEL</span>
+          <span class="term__sess" id="sessId">SESS-0000</span>
+        </div>
+
+        <div class="term__body">
+          <div class="term__field">
+            <label for="fName">&gt; operator_name:</label>
+            <input id="fName" name="name" type="text" autocomplete="name" placeholder="B. Cartwright" required />
+          </div>
+          <div class="term__field">
+            <label for="fChannel">&gt; callback_channel:</label>
+            <input id="fChannel" name="email" type="email" autocomplete="email" placeholder="you@yourfirm.com" required />
+          </div>
+          <div class="term__field term__field--area">
+            <label for="fChore">&gt; the_chore, described_plainly:</label>
+            <textarea id="fChore" name="chore" rows="4" placeholder="Every Monday I export three reports, merge them by hand, fix the dates, and email the result to four people who never reply…" required></textarea>
+          </div>
+          <div class="term__field term__field--small">
+            <label for="fHours">&gt; hours_lost_weekly:</label>
+            <input id="fHours" name="hours" type="number" min="1" max="80" placeholder="6" required />
+          </div>
+
+          <p class="term__error" id="accessError" role="alert" hidden>
+            ERR // ALL FIELDS REQUIRED. THE MACHINES ARE STRICT ABOUT INPUTS.
+          </p>
+
+          <div class="term__actions">
+            <button class="btn btn--solid term__send" id="transmitBtn" type="submit">TRANSMIT&nbsp;▸</button>
+            <span class="term__hint">RESPONSE &lt; 24H // A HUMAN REPLIES. THE MACHINES STAY BUSY.</span>
+          </div>
+        </div>
+
+        <div class="term__done" id="accessDone" hidden>
+          <p class="term__done-line"><span class="term__ok">✓ REQUEST QUEUED</span> // ACK &lt; 24H</p>
+          <p class="term__done-sub">Transmission <b id="sessEcho">SESS-0000</b> received. A smith is being woken.
+          Keep the chore warm - it has weeks to live.</p>
+        </div>
+      </form>
+    </section>
+
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="foot">
+    <div class="foot__shout wrap" aria-hidden="true">
+      <span class="foot__big" id="sleepBig">WHILE YOU SLEEP<span class="foot__fill" aria-hidden="true">WHILE YOU SLEEP</span></span>
+      <p class="foot__tag">Forge7 systems run 24/7/365. Yours could.</p>
+    </div>
+    <div class="wrap foot__rows">
+      <div class="foot__row">
+        <span>FORGE7 // AUTONOMOUS OPERATIONS</span>
+        <nav class="foot__nav" aria-label="Footer">
+          <a href="#operations">Operations</a><a href="#systems">Systems</a><a href="#protocol">Protocol</a><a href="#deployments">Results</a><a href="#terms">Terms</a><a href="#access">Access</a>
+        </nav>
+      </div>
+      <div class="foot__row foot__row--fine">
+        <span>A FICTIONAL AGENCY, BUILT TO SHOW WHAT A REAL ONE SHOULD FEEL LIKE. SET IN SPACE GROTESK &amp; IBM PLEX MONO. POWERED BY THREE.JS, GSAP, AND ONE HONEST PARTICLE FIELD.</span>
+        <span>PRESS [7] FOR OVERDRIVE · © MMXXVI</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- overdrive banner -->
+  <div class="ovr" id="ovrBanner" aria-hidden="true">OVERDRIVE ENGAGED // FLEET AT 300% // <span id="ovrCount">10</span>s</div>
+
+  <script src="js/vendor/gsap.min.js"></script>
+  <script src="js/vendor/ScrollTrigger.min.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

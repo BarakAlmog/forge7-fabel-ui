@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Forge Nº7 · Tireless Machines for Tiresome Work</title>
+  <meta name="description" content="Forge Nº7 is an automaton works - an AI automation smithy. Bring us the chore that eats your Tuesdays; we forge a tireless machine that does it forever. You own it outright. Iron melts at 1538°. So do excuses." />
+  <meta name="theme-color" content="#F0E9DA" />
+  <meta property="og:title" content="Forge Nº7 · Automaton Works" />
+  <meta property="og:description" content="Tireless machines for tiresome work. An automation smithy: you bring the chore, we forge the machine, you own it outright." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23F0E9DA'/%3E%3Cpath d='M14 22h36v6l-10 3v6l8 3v5H18l4-5v-6l-8-4v-8z' fill='%231E1A14'/%3E%3Ctext x='32' y='19' font-family='Georgia' font-size='13' text-anchor='middle' fill='%23E04E0E'%3EN%C2%BA7%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#commission">Skip to the commission form</a>
+
+  <!-- ledger-paper grain -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- scroll temperature gauge -->
+  <aside class="gauge" aria-hidden="true">
+    <span class="gauge__label">HEAT</span>
+    <div class="gauge__track"><div class="gauge__merc" id="gaugeMerc"></div></div>
+    <span class="gauge__read" id="gaugeRead">0020°C</span>
+  </aside>
+
+  <!-- ========================== MASTHEAD ========================== -->
+  <header class="masthead wrap" id="top">
+    <div class="masthead__row">
+      <a class="masthead__brand" href="#top" aria-label="Forge Number Seven, home">
+        <svg class="masthead__mark" viewBox="0 0 40 40" aria-hidden="true">
+          <path d="M6 13h28v5l-8 2.5v4.5l6 2.5v4H10l3-4v-4.5l-6-3V13z" fill="currentColor"/>
+          <path d="M13 6l5 5M21 4l4 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+        </svg>
+        <span class="masthead__word">FORGE&nbsp;<em>Nº7</em></span>
+      </a>
+      <nav class="masthead__nav" aria-label="Plates">
+        <a href="#waste">The Waste</a>
+        <a href="#method">The Method</a>
+        <a href="#works">The Works</a>
+        <a href="#terms">Terms</a>
+      </nav>
+      <a class="btn btn--ghost masthead__cta" href="#commission">Commission&nbsp;→</a>
+    </div>
+    <div class="masthead__dateline" role="presentation">
+      <span>VOL. VII · Nº 7</span>
+      <span class="masthead__motto">PUBLISHED WHEREVER WORK REPEATS ITSELF</span>
+      <span>PRICE: ONE TUESDAY, REFUNDED</span>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ========================== FRONTISPIECE / HERO ========================== -->
+    <section class="hero wrap" aria-labelledby="heroTitle">
+      <p class="kicker hero__kicker" data-reveal>
+        <span class="kicker__rule" aria-hidden="true"></span>
+        AUTOMATON WORKS · SMITHS OF SOFTWARE · DRUDGERY DIES HERE
+        <span class="kicker__rule" aria-hidden="true"></span>
+      </p>
+
+      <h1 class="hero__title" id="heroTitle">
+        <span class="line">Tireless machines</span>
+        <span class="line">for <em>tiresome</em> work.</span>
+      </h1>
+
+      <div class="hero__cols">
+        <div class="hero__copy">
+          <p class="hero__sub" data-reveal>
+            Forge Nº7 is an automation smithy. Bring us the chore that eats your
+            Tuesdays and we will forge a machine that does it forever - no sick
+            days, no sighing, <em>no subscription</em>. We are not wizards and we do
+            not sell magic. We are smiths, and we sell finished iron.
+          </p>
+          <div class="hero__cta" data-reveal>
+            <a class="btn btn--ink" href="#commission">Commission a machine</a>
+            <a class="btn btn--ghost" href="#waste">Begin the inspection ↓</a>
+          </div>
+          <p class="hero__footnote" data-reveal>
+            No dashboards. No retainers. No “AI transformation journey.”<br />
+            One chore in, one tireless machine out. Then the next.
+          </p>
+          <span class="margin-note margin-note--hero" aria-hidden="true">no dashboards.<br/>promise.</span>
+        </div>
+
+        <figure class="hero__fig" role="img" aria-label="Patent-style technical drawing of an absurd machine: a hopper of chores feeding a reduction gear, a patience piston, and a delivery belt producing order.">
+          <svg class="fig fig--contraption" viewBox="0 0 560 540" fill="none">
+            <defs>
+              <pattern id="h1hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+                <line x1="0" y1="0" x2="0" y2="6" stroke="currentColor" stroke-width="0.8" opacity="0.55"/>
+              </pattern>
+            </defs>
+            <!-- frame + corner ticks -->
+            <rect class="dr" x="10" y="10" width="540" height="520" stroke="currentColor" stroke-width="1" opacity="0.35"/>
+            <path class="dr" d="M10 26V10h16M534 10h16v16M550 514v16h-16M26 530H10v-16" stroke="currentColor" stroke-width="2"/>
+
+            <!-- falling papers -->
+            <g class="dr-group">
+              <rect class="dr" x="226" y="6"  width="26" height="18" stroke="currentColor" stroke-width="1.4" transform="rotate(-14 239 15)"/>
+              <rect class="dr" x="284" y="14" width="26" height="18" stroke="currentColor" stroke-width="1.4" transform="rotate(11 297 23)"/>
+              <rect class="dr" x="256" y="0"  width="22" height="15" stroke="currentColor" stroke-width="1.4" transform="rotate(24 267 7)"/>
+            </g>
+
+            <!-- A: hopper -->
+            <path class="dr" d="M186 52h188l-52 76h-84z" stroke="currentColor" stroke-width="2"/>
+            <path class="dr" d="M252 128v30M308 128v30" stroke="currentColor" stroke-width="2"/>
+            <path class="dr" d="M186 52l-34-18M374 52l34-18" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+
+            <!-- B: reduction gear (main) -->
+            <g class="gear gear--main" data-cx="280" data-cy="244">
+              <g stroke="currentColor" stroke-width="2">
+                <circle class="dr" cx="280" cy="244" r="62"/>
+                <circle class="dr" cx="280" cy="244" r="22" fill="url(#h1hatch)"/>
+                <circle class="dr" cx="280" cy="244" r="7"/>
+              </g>
+              <g stroke="currentColor" stroke-width="2">
+                <rect class="dr" x="274" y="172" width="12" height="14"/>
+                <rect class="dr" x="274" y="302" width="12" height="14" transform="rotate(180 280 309)"/>
+                <rect class="dr" x="338" y="238" width="14" height="12"/>
+                <rect class="dr" x="208" y="238" width="14" height="12"/>
+                <rect class="dr" x="318" y="184" width="12" height="14" transform="rotate(45 324 191)"/>
+                <rect class="dr" x="230" y="280" width="12" height="14" transform="rotate(45 236 287)"/>
+                <rect class="dr" x="318" y="290" width="12" height="14" transform="rotate(135 324 297)"/>
+                <rect class="dr" x="230" y="180" width="12" height="14" transform="rotate(135 236 187)"/>
+              </g>
+            </g>
+
+            <!-- small meshing gear -->
+            <g class="gear gear--small" data-cx="170" data-cy="306">
+              <g stroke="currentColor" stroke-width="2">
+                <circle class="dr" cx="170" cy="306" r="34"/>
+                <circle class="dr" cx="170" cy="306" r="11" fill="url(#h1hatch)"/>
+                <rect class="dr" x="164" y="266" width="12" height="11"/>
+                <rect class="dr" x="164" y="335" width="12" height="11"/>
+                <rect class="dr" x="200" y="300" width="11" height="12"/>
+                <rect class="dr" x="129" y="300" width="11" height="12"/>
+              </g>
+            </g>
+
+            <!-- C: patience piston -->
+            <path class="dr" d="M342 244h56" stroke="currentColor" stroke-width="2"/>
+            <rect class="dr" x="398" y="220" width="74" height="48" stroke="currentColor" stroke-width="2" fill="url(#h1hatch)"/>
+            <path class="dr" d="M484 236h28m0 0-8-6m8 6-8 6M484 252h28m0 0-8-6m8 6-8 6" stroke="currentColor" stroke-width="1.4"/>
+
+            <!-- chute to belt -->
+            <path class="dr" d="M254 304 218 424M306 304l36 120" stroke="currentColor" stroke-width="1.6"/>
+
+            <!-- D: delivery belt -->
+            <circle class="dr" cx="140" cy="452" r="24" stroke="currentColor" stroke-width="2"/>
+            <circle class="dr" cx="140" cy="452" r="5"  stroke="currentColor" stroke-width="1.4"/>
+            <circle class="dr" cx="420" cy="452" r="24" stroke="currentColor" stroke-width="2"/>
+            <circle class="dr" cx="420" cy="452" r="5"  stroke="currentColor" stroke-width="1.4"/>
+            <path class="dr" d="M140 428h280M140 476h280" stroke="currentColor" stroke-width="2"/>
+            <!-- tidy output stack -->
+            <g stroke="currentColor" stroke-width="1.6">
+              <rect class="dr" x="356" y="404" width="48" height="8"/>
+              <rect class="dr" x="356" y="412" width="48" height="8"/>
+              <rect class="dr" x="356" y="420" width="48" height="8"/>
+            </g>
+            <path class="dr" d="M462 414h54m0 0-9-7m9 7-9 7" stroke="currentColor" stroke-width="1.6"/>
+
+            <!-- callout letters + leaders -->
+            <g class="fig__labels">
+              <path class="dr" d="M150 78h28l16 10" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+              <text x="132" y="83" class="fig__letter">A</text>
+              <path class="dr" d="M388 158l-34 26" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+              <text x="394" y="160" class="fig__letter">B</text>
+              <path class="dr" d="M452 196v16" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+              <text x="446" y="190" class="fig__letter">C</text>
+              <path class="dr" d="M96 420l28 20" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+              <text x="78" y="418" class="fig__letter">D</text>
+              <text x="234" y="96"  class="fig__note">DRUDGERY&nbsp;IN</text>
+              <text x="462" y="404" class="fig__note">ORDER&nbsp;OUT</text>
+            </g>
+
+            <!-- bottom dimension line -->
+            <path class="dr" d="M110 512h340M110 506v12M450 506v12" stroke="currentColor" stroke-width="1.2"/>
+            <text x="280" y="505" text-anchor="middle" class="fig__note">≈ 39 DAYS / YEAR, RECOVERED</text>
+
+            <!-- legend -->
+            <g class="fig__legend">
+              <text x="26" y="318">A · HOPPER OF CHORES</text>
+              <text x="26" y="334">B · REDUCTION GEAR</text>
+              <text x="26" y="350">C · PATIENCE PISTON</text>
+              <text x="26" y="366">D · DELIVERY BELT</text>
+            </g>
+
+            <!-- title block -->
+            <g>
+              <rect class="dr" x="332" y="528" width="218" height="2" fill="none"/>
+              <text x="548" y="546" text-anchor="end" class="fig__note fig__note--title">FIG. 1 · THE GENERAL PRINCIPLE · SCALE: NONE · TOLERANCE: ZERO</text>
+            </g>
+          </svg>
+          <figcaption class="fig__caption">
+            <span>FIG. 1</span> The general principle: drudgery in, hours out. Patent honestly pending.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ========================== TICKER ========================== -->
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker__track">
+        <span class="ticker__seq">
+          FRESH FROM THE FORGE: PATENT Nº 0041, “THE INVOICE DEVOURER” <i>✦</i>
+          IRON MELTS AT 1538° <i>✦</i> SO DO EXCUSES <i>✦</i>
+          SEVEN STATIONS, NO SHORTCUTS <i>✦</i>
+          YOU OWN THE MACHINE, OUTRIGHT <i>✦</i>
+          NO DASHBOARDS WERE HARMED <i>✦</i>
+          COMMISSIONS OPEN FOR THE QUARTER <i>✦</i>
+        </span>
+        <span class="ticker__seq">
+          FRESH FROM THE FORGE: PATENT Nº 0041, “THE INVOICE DEVOURER” <i>✦</i>
+          IRON MELTS AT 1538° <i>✦</i> SO DO EXCUSES <i>✦</i>
+          SEVEN STATIONS, NO SHORTCUTS <i>✦</i>
+          YOU OWN THE MACHINE, OUTRIGHT <i>✦</i>
+          NO DASHBOARDS WERE HARMED <i>✦</i>
+          COMMISSIONS OPEN FOR THE QUARTER <i>✦</i>
+        </span>
+      </div>
+    </div>
+
+    <!-- ========================== PLATE I · THE WASTE ========================== -->
+    <section class="plate waste wrap" id="waste" aria-labelledby="wasteTitle">
+      <div class="plate__head" data-reveal>
+        <span>PLATE I · THE WASTE</span>
+        <span>AN HONEST ACCOUNTING</span>
+      </div>
+      <h2 class="plate__title" id="wasteTitle" data-reveal>
+        Before we sell you anything,<br />an <em>accounting</em> of your week.
+      </h2>
+
+      <div class="ledger" role="table" aria-label="Ledger of weekly hours lost to repetitive work">
+        <div class="ledger__row ledger__row--head" role="row">
+          <span role="columnheader">ENTRY</span>
+          <span role="columnheader">HRS / WK</span>
+        </div>
+        <div class="ledger__row" role="row" data-reveal>
+          <span class="ledger__item" role="cell">Copying numbers from one system into another <em>(they never thank you)</em></span>
+          <span class="ledger__leader" aria-hidden="true"></span>
+          <span class="ledger__val" role="cell" data-count="6">0</span>
+        </div>
+        <div class="ledger__row" role="row" data-reveal>
+          <span class="ledger__item" role="cell">Chasing signatures, approvals, and <em>“any update on this?”</em></span>
+          <span class="ledger__leader" aria-hidden="true"></span>
+          <span class="ledger__val" role="cell" data-count="3">0</span>
+        </div>
+        <div class="ledger__row" role="row" data-reveal>
+          <span class="ledger__item" role="cell">Compiling the report nobody reads <em>(until something breaks)</em></span>
+          <span class="ledger__leader" aria-hidden="true"></span>
+          <span class="ledger__val" role="cell" data-count="4">0</span>
+        </div>
+        <div class="ledger__row" role="row" data-reveal>
+          <span class="ledger__item" role="cell">Answering the same email, slightly reworded</span>
+          <span class="ledger__leader" aria-hidden="true"></span>
+          <span class="ledger__val" role="cell" data-count="5">0</span>
+        </div>
+
+        <div class="ledger__total" role="row">
+          <span class="ledger__total-label">TOTAL, A TYPICAL DESK</span>
+          <span class="ledger__total-math">
+            <b><span data-count="18">0</span> HRS/WK</b>
+            <i>× 52 =</i>
+            <b><span data-count="936">0</span> HOURS</b>
+            <i>=</i>
+            <b><span data-count="39">0</span> WORKING DAYS</b>
+          </span>
+          <span class="stamp stamp--paid" data-stamp>PAID IN HOURS</span>
+        </div>
+      </div>
+
+      <p class="waste__verdict" data-reveal>
+        Thirty-nine days. You are currently the machine.<br />
+        <em>We would like to relieve you of the position.</em>
+      </p>
+      <span class="margin-note margin-note--waste" aria-hidden="true">(we counted.<br/>it’s worse.)</span>
+    </section>
+
+    <!-- ========================== PLATE II · THE METHOD ========================== -->
+    <section class="plate method" id="method" aria-labelledby="methodTitle">
+      <div class="method__pin">
+        <div class="method__bar wrap">
+          <div class="plate__head plate__head--tight">
+            <span>PLATE II · THE METHOD</span>
+            <span class="method__counter" id="stationCounter">STATION I / VII</span>
+          </div>
+          <div class="method__heat" aria-hidden="true"><div class="method__heat-fill" id="methodHeat"></div></div>
+        </div>
+
+        <div class="method__track" id="methodTrack">
+
+          <article class="station station--intro">
+            <h2 class="plate__title" id="methodTitle">Every machine passes<br /><em>seven stations.</em></h2>
+            <p>No shortcuts, no “sprints,” no decks. The same patient route,
+              every commission, from first audit to final tending. Scroll on;
+              the iron heats as you go.</p>
+            <p class="station__hint" aria-hidden="true">SCROLL → THE STATIONS ADVANCE</p>
+          </article>
+
+          <article class="station" data-station="1">
+            <span class="station__numeral" aria-hidden="true">I</span>
+            <div class="station__body">
+              <p class="station__kicker">STATION I · WEEK ONE</p>
+              <h3 class="station__name">The Audit</h3>
+              <p class="station__desc">We sit beside you and watch the week go by. The boring parts confess themselves.</p>
+              <svg class="station__icon" viewBox="0 0 80 80" aria-hidden="true">
+                <rect class="dr" x="16" y="12" width="30" height="42" stroke="currentColor" stroke-width="2" fill="none"/>
+                <path class="dr" d="M22 22h18M22 30h18M22 38h12" stroke="currentColor" stroke-width="1.6"/>
+                <circle class="dr" cx="48" cy="48" r="14" stroke="currentColor" stroke-width="2" fill="none"/>
+                <path class="dr" d="M58 58 70 70" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </article>
+
+          <article class="station" data-station="2">
+            <span class="station__numeral" aria-hidden="true">II</span>
+            <div class="station__body">
+              <p class="station__kicker">STATION II · WEEK ONE</p>
+              <h3 class="station__name">The Draft</h3>
+              <p class="station__desc">Your machine is drawn before it is built. Blueprint first; you approve every bolt.</p>
+              <svg class="station__icon" viewBox="0 0 80 80" aria-hidden="true">
+                <circle class="dr" cx="40" cy="20" r="5" stroke="currentColor" stroke-width="2" fill="none"/>
+                <path class="dr" d="M37 24 24 62M43 24l13 38" stroke="currentColor" stroke-width="2"/>
+                <path class="dr" d="M20 66c12-9 28-9 40 0" stroke="currentColor" stroke-width="1.6" stroke-dasharray="4 4" fill="none"/>
+              </svg>
+            </div>
+          </article>
+
+          <article class="station" data-station="3">
+            <span class="station__numeral" aria-hidden="true">III</span>
+            <div class="station__body">
+              <p class="station__kicker">STATION III · WEEKS TWO &amp; THREE</p>
+              <h3 class="station__name">The Cast</h3>
+              <p class="station__desc">We pour a first, crude version. Ugly. Moving. Yours.</p>
+              <svg class="station__icon" viewBox="0 0 80 80" aria-hidden="true">
+                <path class="dr" d="M14 26l26-9 8 16-26 12z" stroke="currentColor" stroke-width="2" fill="none"/>
+                <path class="dr" d="M47 30c4 7 7 14 8 22" stroke="currentColor" stroke-width="2" fill="none"/>
+                <rect class="dr" x="46" y="54" width="22" height="12" stroke="currentColor" stroke-width="2" fill="none"/>
+                <circle class="dr" cx="52" cy="44" r="1.6" fill="currentColor"/>
+                <circle class="dr" cx="56" cy="38" r="1.4" fill="currentColor"/>
+              </svg>
+            </div>
+          </article>
+
+          <article class="station" data-station="4">
+            <span class="station__numeral" aria-hidden="true">IV</span>
+            <div class="station__body">
+              <p class="station__kicker">STATION IV · WEEK FOUR</p>
+              <h3 class="station__name">The Temper</h3>
+              <p class="station__desc">We harden it against real life: edge cases, typos, Mondays.</p>
+              <svg class="station__icon" viewBox="0 0 80 80" aria-hidden="true">
+                <path class="dr" d="M14 44h44l-6 8h-9v6h7l5 8H24l5-8h7v-6H18z" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round"/>
+                <path class="dr" d="M52 14l10 12" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                <rect class="dr" x="58" y="8" width="14" height="10" rx="1" transform="rotate(40 65 13)" stroke="currentColor" stroke-width="2" fill="none"/>
+                <path class="dr" d="M40 34l-3-6M46 33l1-7M34 36l-6-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </article>
+
+          <article class="station" data-station="5">
+            <span class="station__numeral" aria-hidden="true">V</span>
+            <div class="station__body">
+              <p class="station__kicker">STATION V · WEEKS FIVE &amp; SIX</p>
+              <h3 class="station__name">The Trial</h3>
+              <p class="station__desc">It works beside you for two weeks. You inspect everything. It does not get offended.</p>
+              <svg class="station__icon" viewBox="0 0 80 80" aria-hidden="true">
+                <circle class="dr" cx="40" cy="46" r="22" stroke="currentColor" stroke-width="2" fill="none"/>
+                <rect class="dr" x="36" y="14" width="8" height="7" stroke="currentColor" stroke-width="2" fill="none"/>
+                <path class="dr" d="M40 46l8-12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <circle class="dr" cx="40" cy="46" r="2" fill="currentColor"/>
+                <path class="dr" d="M40 28v4M58 46h-4M40 64v-4M22 46h4" stroke="currentColor" stroke-width="1.6"/>
+              </svg>
+            </div>
+          </article>
+
+          <article class="station" data-station="6">
+            <span class="station__numeral" aria-hidden="true">VI</span>
+            <div class="station__body">
+              <p class="station__kicker">STATION VI · HANDOVER DAY</p>
+              <h3 class="station__name">The Handover</h3>
+              <p class="station__desc">The machine takes the chair. You take the afternoon. The keys are yours, not ours.</p>
+              <svg class="station__icon" viewBox="0 0 80 80" aria-hidden="true">
+                <circle class="dr" cx="24" cy="40" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+                <circle class="dr" cx="24" cy="40" r="3.5" stroke="currentColor" stroke-width="1.6" fill="none"/>
+                <path class="dr" d="M34 40h32M56 40v9M64 40v12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </article>
+
+          <article class="station" data-station="7">
+            <span class="station__numeral" aria-hidden="true">VII</span>
+            <div class="station__body">
+              <p class="station__kicker">STATION VII · IN PERPETUITY</p>
+              <h3 class="station__name">The Tending</h3>
+              <p class="station__desc">We keep it oiled forever after. If it breaks, we reforge it. Free.</p>
+              <svg class="station__icon" viewBox="0 0 80 80" aria-hidden="true">
+                <path class="dr" d="M24 46h22v16H24zM28 46v-6h8v6" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round"/>
+                <path class="dr" d="M46 50l18-16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path class="dr" d="M66 38c0 2.4-1.6 4-3.4 4s-3.2-1.6-3.2-4c0-2.4 3.3-6.4 3.3-6.4S66 35.6 66 38z" stroke="currentColor" stroke-width="1.6" fill="none"/>
+              </svg>
+            </div>
+          </article>
+
+          <article class="station station--outro">
+            <p class="station__hint station__hint--end">END OF PLATE II</p>
+            <h3 class="station__name station__name--outro">Now, the floor itself.<br/><em>Mind the sparks.</em></h3>
+            <p class="station__hint" aria-hidden="true">KEEP SCROLLING ↓</p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================== PLATE III · THE FORGE FLOOR (dark interlude) ========================== -->
+    <section class="plate forge" id="forge" aria-labelledby="forgeTitle">
+      <canvas class="forge__embers" id="emberCanvas" aria-hidden="true"></canvas>
+      <div class="wrap forge__inner">
+        <div class="plate__head plate__head--dark" data-reveal>
+          <span>PLATE III · THE FORGE FLOOR</span>
+          <span>VISITORS MUST STRIKE</span>
+        </div>
+        <h2 class="plate__title forge__title" id="forgeTitle" data-reveal>
+          Strike while<br />the iron is <em>hot.</em>
+        </h2>
+        <p class="forge__lede" data-reveal>
+          Every machine we ship is hammered against reality before it ever
+          touches your desk. Try it yourself. <b>Seven strikes temper the iron.</b>
+        </p>
+
+        <div class="forge__bench" data-reveal>
+          <div class="forge__meta">
+            <span class="forge__count" id="strikeCount" aria-live="polite">STRIKE&nbsp;0&nbsp;OF&nbsp;VII</span>
+            <span class="tally" id="tally" aria-hidden="true">
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </span>
+          </div>
+
+          <button class="forge__anvil-btn" id="anvilBtn" type="button" aria-label="Strike the iron with the hammer">
+            <svg class="forge__anvil" viewBox="0 0 480 320" aria-hidden="true">
+              <defs>
+                <linearGradient id="ingotGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#FFE08A"/>
+                  <stop offset="0.45" stop-color="#FF9633"/>
+                  <stop offset="1" stop-color="#E04E0E"/>
+                </linearGradient>
+                <radialGradient id="glowGrad" cx="0.5" cy="0.5" r="0.5">
+                  <stop offset="0" stop-color="#FF7A1A" stop-opacity="0.55"/>
+                  <stop offset="1" stop-color="#FF7A1A" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+
+              <ellipse class="forge__glow" id="ingotGlow" cx="240" cy="150" rx="150" ry="56" fill="url(#glowGrad)"/>
+
+              <!-- anvil body -->
+              <g id="anvilBody">
+                <path d="M118 150h232v26l-58 16v28l40 18v26H148v-26l40-18v-28l-70-16z" fill="#0D0A07" stroke="#3A2E22" stroke-width="2"/>
+                <path d="M118 150c-30 4-66 0-88-14 16-12 40-16 60-16l28 4z" fill="#0D0A07" stroke="#3A2E22" stroke-width="2"/>
+                <path d="M120 150h228" stroke="#FF7A1A" stroke-width="2.5" opacity="0.8"/>
+                <rect x="132" y="264" width="216" height="18" fill="#0D0A07" stroke="#3A2E22" stroke-width="2"/>
+              </g>
+
+              <!-- ingot -->
+              <g id="ingot">
+                <rect id="ingotBar" x="186" y="122" width="108" height="26" rx="5" fill="url(#ingotGrad)"/>
+              </g>
+
+              <!-- tempered gear (hidden until done) -->
+              <g id="temperGear" opacity="0">
+                <g id="temperGearSpin">
+                  <circle cx="240" cy="118" r="26" fill="none" stroke="#FF9633" stroke-width="4"/>
+                  <circle cx="240" cy="118" r="8" fill="none" stroke="#FF9633" stroke-width="3"/>
+                  <g stroke="#FF9633" stroke-width="4">
+                    <path d="M240 84v10M240 142v10M206 118h10M264 118h10"/>
+                    <path d="M216 94l7 7M257 135l7 7M264 94l-7 7M223 135l-7 7"/>
+                  </g>
+                </g>
+              </g>
+
+              <!-- hammer -->
+              <g id="hammer">
+                <g id="hammerSwing">
+                  <path d="M330 40 252 112" stroke="#5A4632" stroke-width="9" stroke-linecap="round"/>
+                  <rect x="222" y="86" width="52" height="34" rx="4" transform="rotate(-42 248 103)" fill="#171310" stroke="#FF9633" stroke-width="2"/>
+                </g>
+              </g>
+            </svg>
+            <span class="forge__hint" id="forgeHint">TAP THE IRON · DON’T BE SHY</span>
+          </button>
+
+          <div class="forge__done" id="forgeDone" hidden>
+            <span class="stamp stamp--tempered" data-stamp-instant>TEMPERED · FIT FOR SERVICE</span>
+            <p class="forge__reward">You’d make a fine apprentice. We are not hiring.<br/><em>The machines took those jobs too.</em></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================== PLATE IV · THE WORKS ========================== -->
+    <section class="plate works wrap" id="works" aria-labelledby="worksTitle">
+      <div class="plate__head" data-reveal>
+        <span>PLATE IV · THE WORKS</span>
+        <span>MACHINES CURRENTLY IN SERVICE</span>
+      </div>
+      <h2 class="plate__title" id="worksTitle" data-reveal>
+        Recent commissions,<br /><em>still running.</em>
+      </h2>
+
+      <div class="works__grid">
+
+        <article class="works-card" data-reveal>
+          <header class="works-card__head">
+            <span>PATENT Nº 0041</span><span>IN SERVICE · 14 MONTHS</span>
+          </header>
+          <svg class="works-card__fig works-card__fig--devourer" viewBox="0 0 200 140" aria-hidden="true">
+            <rect class="dr" x="74" y="30" width="86" height="80" stroke="currentColor" stroke-width="2" fill="none"/>
+            <path class="dr devourer-teeth" d="M74 42l-13 8 13 8-13 8 13 8-13 8 13 8" stroke="currentColor" stroke-width="2" fill="none"/>
+            <circle cx="84" cy="40" r="1.5" fill="currentColor"/><circle cx="150" cy="40" r="1.5" fill="currentColor"/>
+            <circle cx="84" cy="100" r="1.5" fill="currentColor"/><circle cx="150" cy="100" r="1.5" fill="currentColor"/>
+            <g class="devourer-paper">
+              <rect class="dr" x="16" y="56" width="34" height="26" stroke="currentColor" stroke-width="1.6" fill="none" transform="rotate(-7 33 69)"/>
+              <path class="dr" d="M22 64h20M22 70h20M22 76h14" stroke="currentColor" stroke-width="1" transform="rotate(-7 33 69)"/>
+            </g>
+            <circle cx="56" cy="66" r="1.4" fill="currentColor"/><circle cx="62" cy="78" r="1.2" fill="currentColor"/><circle cx="58" cy="88" r="1" fill="currentColor"/>
+            <path class="dr" d="M160 58h24M160 70h24M160 82h24" stroke="currentColor" stroke-width="1.6"/>
+            <rect class="dr" x="168" y="92" width="22" height="14" stroke="currentColor" stroke-width="1.6" fill="none"/>
+            <text x="16" y="126" class="fig__note">FIG. 4a · FEEDING POSTURE</text>
+          </svg>
+          <h3 class="works-card__name">The Invoice Devourer</h3>
+          <dl class="works-card__specs">
+            <div><dt>FEEDS ON</dt><dd>PDF invoices, eleven hostile formats</dd></div>
+            <div><dt>PRODUCES</dt><dd>Clean ledger rows, reconciled</dd></div>
+            <div><dt>RECOVERS</dt><dd>14 hrs / week</dd></div>
+            <div><dt>TEMPERAMENT</dt><dd>Insatiable</dd></div>
+          </dl>
+          <p class="works-card__client">In service at a 40-hand logistics firm, Rotterdam.</p>
+        </article>
+
+        <article class="works-card" data-reveal>
+          <header class="works-card__head">
+            <span>PATENT Nº 0033</span><span>IN SERVICE · 2 YEARS</span>
+          </header>
+          <svg class="works-card__fig works-card__fig--chaser" viewBox="0 0 200 140" aria-hidden="true">
+            <path class="dr" d="M14 64h18M10 78h22M14 92h18" stroke="currentColor" stroke-width="1.4" class="chaser-lines"/>
+            <g class="chaser-cart">
+              <rect class="dr" x="52" y="56" width="48" height="30" stroke="currentColor" stroke-width="2" fill="none"/>
+              <circle class="dr chaser-wheel" cx="62" cy="96" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+              <path class="dr chaser-wheel-spoke" d="M62 88v16M54 96h16" stroke="currentColor" stroke-width="1.2"/>
+              <circle class="dr chaser-wheel" cx="90" cy="96" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+              <circle class="dr" cx="76" cy="48" r="6" stroke="currentColor" stroke-width="1.6" fill="none"/>
+              <path class="dr" d="M70 48h-8M82 48h8" stroke="currentColor" stroke-width="1.6"/>
+              <path class="dr" d="M100 66h22m-22 12h16" stroke="currentColor" stroke-width="1.6"/>
+            </g>
+            <g class="chaser-prey">
+              <rect class="dr" x="142" y="46" width="30" height="38" stroke="currentColor" stroke-width="1.8" fill="none" transform="rotate(8 157 65)"/>
+              <path class="dr" d="M148 56h18M148 63h18M148 70h12" stroke="currentColor" stroke-width="1" transform="rotate(8 157 65)"/>
+              <path class="dr" d="M150 88l-4 12M164 88l6 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <path class="dr" d="M178 42c2-3 5-4 8-3M180 52c3-1 6 0 8 2" stroke="currentColor" stroke-width="1.2"/>
+            </g>
+            <text x="16" y="126" class="fig__note">FIG. 3c · PURSUIT, PATIENT</text>
+          </svg>
+          <h3 class="works-card__name">The Perpetual Chaser</h3>
+          <dl class="works-card__specs">
+            <div><dt>FEEDS ON</dt><dd>Unsigned contracts, unpaid invoices</dd></div>
+            <div><dt>PRODUCES</dt><dd>Signatures, settled accounts, peace</dd></div>
+            <div><dt>RECOVERS</dt><dd>6 hrs / week</dd></div>
+            <div><dt>TEMPERAMENT</dt><dd>Relentless, but polite</dd></div>
+          </dl>
+          <p class="works-card__client">In service at a 12-hand law practice, Tel Aviv.</p>
+        </article>
+
+        <article class="works-card" data-reveal>
+          <header class="works-card__head">
+            <span>PATENT Nº 0027</span><span>IN SERVICE · 3 YEARS</span>
+          </header>
+          <svg class="works-card__fig works-card__fig--oracle" viewBox="0 0 200 140" aria-hidden="true">
+            <g class="oracle-gear">
+              <circle class="dr" cx="100" cy="104" r="16" stroke="currentColor" stroke-width="2" fill="none"/>
+              <path class="dr" d="M100 84v8M100 116v8M80 104h8M112 104h8M86 90l6 6M108 112l6 6M114 90l-6 6M92 112l-6 6" stroke="currentColor" stroke-width="2"/>
+            </g>
+            <rect class="dr" x="94" y="74" width="12" height="14" stroke="currentColor" stroke-width="1.6" fill="none"/>
+            <circle class="dr oracle-ball" cx="100" cy="48" r="26" stroke="currentColor" stroke-width="2" fill="none"/>
+            <path class="dr" d="M88 42c4-6 12-8 18-5" stroke="currentColor" stroke-width="1.2"/>
+            <text x="100" y="56" text-anchor="middle" class="fig__letter">M</text>
+            <g class="oracle-rays">
+              <path class="dr" d="M100 12v8M132 24l-6 6M68 24l6 6M138 48h-8M62 48h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </g>
+            <rect class="dr" x="148" y="34" width="30" height="34" stroke="currentColor" stroke-width="1.6" fill="none"/>
+            <path class="dr" d="M148 44h30" stroke="currentColor" stroke-width="1.2"/>
+            <circle cx="156" cy="52" r="1.2" fill="currentColor"/><circle cx="164" cy="52" r="1.2" fill="currentColor"/><circle cx="172" cy="52" r="1.2" fill="currentColor"/>
+            <circle cx="156" cy="60" r="1.2" fill="currentColor"/><circle cx="164" cy="60" r="1.2" fill="currentColor"/>
+            <text x="16" y="126" class="fig__note">FIG. 7b · SUNDAY, 23:00</text>
+          </svg>
+          <h3 class="works-card__name">The Monday Oracle</h3>
+          <dl class="works-card__specs">
+            <div><dt>FEEDS ON</dt><dd>Six systems, none of which agree</dd></div>
+            <div><dt>PRODUCES</dt><dd>The weekly report, before the week wakes</dd></div>
+            <div><dt>RECOVERS</dt><dd>4 hrs / week, and every Sunday night</dd></div>
+            <div><dt>TEMPERAMENT</dt><dd>Clairvoyant by schedule</dd></div>
+          </dl>
+          <p class="works-card__client">In service at a 60-hand wholesale house, Leeds.</p>
+        </article>
+
+        <article class="works-card" data-reveal>
+          <header class="works-card__head">
+            <span>PATENT Nº 0019</span><span>IN SERVICE · 4 YEARS</span>
+          </header>
+          <svg class="works-card__fig works-card__fig--triage" viewBox="0 0 200 140" aria-hidden="true">
+            <path class="dr" d="M78 18h44l-9 22H87z" stroke="currentColor" stroke-width="2" fill="none"/>
+            <rect class="dr" x="74" y="40" width="52" height="24" stroke="currentColor" stroke-width="2" fill="none"/>
+            <path class="dr" d="M86 64 44 104M94 64l6 40M114 64l42 40" stroke="currentColor" stroke-width="1.6"/>
+            <g class="triage-mail">
+              <rect class="dr" x="52" y="78" width="18" height="12" stroke="currentColor" stroke-width="1.4" fill="none" transform="rotate(-38 61 84)"/>
+              <rect class="dr" x="92" y="80" width="18" height="12" stroke="currentColor" stroke-width="1.4" fill="none"/>
+              <rect class="dr" x="128" y="78" width="18" height="12" stroke="currentColor" stroke-width="1.4" fill="none" transform="rotate(38 137 84)"/>
+            </g>
+            <text x="38" y="118" class="fig__letter">✓</text>
+            <text x="97" y="122" class="fig__letter">?</text>
+            <text x="158" y="118" class="fig__letter">✗</text>
+            <text x="16" y="134" class="fig__note">FIG. 2a · THE SORTING OF THE FOUR HUNDRED</text>
+          </svg>
+          <h3 class="works-card__name">The Triage Engine</h3>
+          <dl class="works-card__specs">
+            <div><dt>FEEDS ON</dt><dd>400 inbound emails a day</dd></div>
+            <div><dt>PRODUCES</dt><dd>Routed threads, drafted replies</dd></div>
+            <div><dt>RECOVERS</dt><dd>11 hrs / week, split across a team</dd></div>
+            <div><dt>TEMPERAMENT</dt><dd>Unflappable</dd></div>
+          </dl>
+          <p class="works-card__client">In service at a 9-hand design studio, Berlin.</p>
+        </article>
+
+      </div>
+      <span class="margin-note margin-note--works" aria-hidden="true">real machines.<br/>names changed,<br/>hours kept.</span>
+    </section>
+
+    <!-- ========================== PLATE V · NOTICES OF RETIREMENT ========================== -->
+    <section class="plate obits wrap" id="retired" aria-labelledby="obitsTitle">
+      <div class="plate__head" data-reveal>
+        <span>PLATE V · NOTICES OF RETIREMENT</span>
+        <span>THE CHORES, IN MEMORIAM</span>
+      </div>
+      <h2 class="plate__title" id="obitsTitle" data-reveal>
+        Fondly remembered.<br /><em>Never repeated.</em>
+      </h2>
+
+      <div class="obits__grid">
+        <article class="obit" data-reveal>
+          <span class="obit__fleuron" aria-hidden="true">❦</span>
+          <h3 class="obit__name">Manual Invoice Entry</h3>
+          <p class="obit__age">AGED 11 YEARS</p>
+          <p class="obit__text">Passed quietly on a Tuesday, survived by an inbox at peace and fourteen reclaimed hours. “I do not miss it,” said Brenda, Accounts. No flowers.</p>
+        </article>
+        <article class="obit" data-reveal>
+          <span class="obit__fleuron" aria-hidden="true">❦</span>
+          <h3 class="obit__name">The Friday Report</h3>
+          <p class="obit__age">AGED 6 YEARS</p>
+          <p class="obit__text">Compiled itself for the first time on the 3rd of March and never troubled a human again. Donations to the long-lunch fund, please.</p>
+        </article>
+        <article class="obit" data-reveal>
+          <span class="obit__fleuron" aria-hidden="true">❦</span>
+          <h3 class="obit__name">Copy-Paste Between Systems</h3>
+          <p class="obit__age">AGED 9 YEARS</p>
+          <p class="obit__text">Died at 4:51 p.m. doing what it loved: wasting everyone’s time. Survived by twenty-six browser tabs, now closed.</p>
+        </article>
+        <article class="obit" data-reveal>
+          <span class="obit__fleuron" aria-hidden="true">❦</span>
+          <h3 class="obit__name">Chasing Signatures</h3>
+          <p class="obit__age">AGED 4 YEARS</p>
+          <p class="obit__text">Hounded to completion by the Perpetual Chaser, Patent Nº 0033. The chase is over. The contracts are signed. Rest now.</p>
+        </article>
+      </div>
+      <p class="obits__cta" data-reveal>
+        Which of your chores deserves a notice? <a href="#commission">Send us its name.</a>
+      </p>
+    </section>
+
+    <!-- ========================== PLATE VI · FORGED-IRON TERMS ========================== -->
+    <section class="plate terms wrap" id="terms" aria-labelledby="termsTitle">
+      <div class="plate__head" data-reveal>
+        <span>PLATE VI · THE TERMS</span>
+        <span>FORGED IRON, NOT FINE PRINT</span>
+      </div>
+      <h2 class="plate__title" id="termsTitle" data-reveal>
+        Seven clauses.<br /><em>No fine print.</em>
+      </h2>
+
+      <ol class="terms__list">
+        <li class="terms__row" data-reveal>
+          <span class="terms__num" aria-hidden="true">I</span>
+          <p><b>You own the machine. Outright.</b> We build it, you keep it. No rent, no ransom, no per-seat tithe.</p>
+        </li>
+        <li class="terms__row" data-reveal>
+          <span class="terms__num" aria-hidden="true">II</span>
+          <p><b>Fixed price, quoted before we strike.</b> If we misjudged the metal, that is our loss, not yours.</p>
+        </li>
+        <li class="terms__row" data-reveal>
+          <span class="terms__num" aria-hidden="true">III</span>
+          <p><b>If it breaks, we reforge it. Free.</b> An automaton that stops is our shame, not your problem.</p>
+        </li>
+        <li class="terms__row" data-reveal>
+          <span class="terms__num" aria-hidden="true">IV</span>
+          <p><b>If the numbers don’t favour you tenfold,</b> we will say so at the audit and send you home with your money.</p>
+        </li>
+        <li class="terms__row" data-reveal>
+          <span class="terms__num" aria-hidden="true">V</span>
+          <p><b>Your data stays under your roof.</b> The machine works in your house, with your keys, on your metal.</p>
+        </li>
+        <li class="terms__row" data-reveal>
+          <span class="terms__num" aria-hidden="true">VI</span>
+          <p><b>We will never sell you a dashboard.</b> If you ask nicely: still no. You wanted the hours, not another screen.</p>
+        </li>
+        <li class="terms__row" data-reveal>
+          <span class="terms__num" aria-hidden="true">VII</span>
+          <p><b>We tend what we forge.</b> Quarterly inspections, oil included, for as long as the machine serves.</p>
+        </li>
+      </ol>
+      <span class="margin-note margin-note--terms" aria-hidden="true">read clause I twice.<br/>everyone does.</span>
+    </section>
+
+    <!-- ========================== PLATE VII · THE COMMISSION ========================== -->
+    <section class="plate commission wrap" id="commission" aria-labelledby="commissionTitle">
+      <div class="plate__head" data-reveal>
+        <span>PLATE VII · THE COMMISSION</span>
+        <span>WORK ORDERS, ACCEPTED IN WRITING</span>
+      </div>
+      <h2 class="plate__title" id="commissionTitle" data-reveal>
+        Bring us<br /><em>the chore.</em>
+      </h2>
+
+      <form class="order" id="orderForm" novalidate>
+        <header class="order__head">
+          <span>WORK ORDER</span>
+          <span id="orderNo">Nº ····</span>
+        </header>
+
+        <div class="order__grid">
+          <div class="order__field">
+            <label for="fName">NAME OF THE AFFLICTED</label>
+            <input id="fName" name="name" type="text" autocomplete="name" placeholder="e.g. B. Cartwright" required />
+          </div>
+          <div class="order__field">
+            <label for="fReach">WHERE WE MAY REACH YOU</label>
+            <input id="fReach" name="contact" type="email" autocomplete="email" placeholder="you@yourfirm.com" required />
+          </div>
+          <div class="order__field order__field--full">
+            <label for="fChore">THE CHORE, DESCRIBED PLAINLY</label>
+            <textarea id="fChore" name="chore" rows="4" placeholder="Every Monday I export three reports, merge them by hand, fix the dates, and email the result to four people who never reply…" required></textarea>
+          </div>
+          <div class="order__field">
+            <label for="fHours">HOURS IT STEALS, WEEKLY</label>
+            <input id="fHours" name="hours" type="number" min="1" max="80" placeholder="6" required />
+          </div>
+          <div class="order__field order__field--seal">
+            <button class="seal" id="sealBtn" type="submit" aria-label="Press the wax seal to submit your work order">
+              <svg viewBox="0 0 140 140" aria-hidden="true">
+                <defs>
+                  <path id="sealArc" d="M70 16a54 54 0 1 1-.01 0" fill="none"/>
+                </defs>
+                <circle cx="70" cy="70" r="64" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="2 6" stroke-linecap="round"/>
+                <circle cx="70" cy="70" r="44" fill="currentColor"/>
+                <circle cx="70" cy="70" r="38" fill="none" stroke="#F0E9DA" stroke-width="1.4" opacity="0.7"/>
+                <text class="seal__mono" x="70" y="84" text-anchor="middle">F·7</text>
+                <text class="seal__ring">
+                  <textPath href="#sealArc" startOffset="0">FORGE Nº7 · AUTOMATON WORKS · EST. MMXIX ·</textPath>
+                </text>
+              </svg>
+              <span class="seal__hint">PRESS SEAL<br/>TO SUBMIT</span>
+            </button>
+          </div>
+        </div>
+
+        <p class="order__error" id="orderError" role="alert" hidden>
+          The smiths require every field. Ink them all, then press the seal.
+        </p>
+
+        <div class="order__received" id="orderReceived" hidden>
+          <span class="stamp stamp--received" data-stamp-instant>RECEIVED</span>
+          <p>Work order <b id="orderNoEcho">Nº ····</b> is on the bench.<br />
+          A smith replies within one working day. <em>Machines don’t dawdle; neither do we.</em></p>
+        </div>
+      </form>
+    </section>
+
+    <!-- ========================== FOOTER ========================== -->
+    <footer class="colophon">
+      <div class="colophon__shout wrap" aria-hidden="true">
+        <span class="colophon__big">EXCUSES MELT</span>
+        <span class="colophon__big colophon__big--temp">AT 1538°</span>
+      </div>
+      <div class="wrap colophon__rows">
+        <div class="colophon__row">
+          <span>FORGE Nº7 · AUTOMATON WORKS</span>
+          <nav class="colophon__nav" aria-label="Footer">
+            <a href="#waste">Waste</a><a href="#method">Method</a><a href="#forge">Forge</a><a href="#works">Works</a><a href="#terms">Terms</a><a href="#commission">Commission</a>
+          </nav>
+        </div>
+        <div class="colophon__row colophon__row--fine">
+          <span>SET IN FRAUNCES, NEWSREADER &amp; IBM PLEX MONO ON HONEST PAPER. ANIMATED WITH GSAP. ZERO DASHBOARDS.</span>
+          <span>©MMXXVI FORGE Nº7 · A FICTIONAL SMITHY, FORGED TO SHOW WHAT A REAL ONE COULD BE</span>
+        </div>
+      </div>
+    </footer>
+
+  </main>
+
+  <script src="js/vendor/gsap.min.js"></script>
+  <script src="js/vendor/ScrollTrigger.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
