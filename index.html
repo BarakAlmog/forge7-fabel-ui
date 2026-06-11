@@ -53,6 +53,7 @@
       <span class="bar__clock" id="utcClock">--:--:--<i>UTC</i></span>
       <span class="bar__dot" aria-hidden="true"></span>
       <span class="bar__nominal">NOMINAL</span>
+      <button class="bar__snd" id="sndBtn" type="button" aria-pressed="false" aria-label="Toggle sound">SND·OFF</button>
       <a class="btn btn--solid bar__cta" href="#access">Request&nbsp;access</a>
     </div>
   </header>
@@ -483,6 +484,10 @@
               <button class="btn btn--solid drill__btn" id="drillNext" type="button" hidden>Next level ▸</button>
             </div>
             <p class="drill__keys" aria-hidden="true">ARROWS / WASD · Z UNDO · R RESET · SWIPE ON TOUCH</p>
+            <div class="drill__scores" id="drillScores" hidden>
+              <span class="tele__label">FLOOR RECORDS · THIS LEVEL</span>
+              <ol></ol>
+            </div>
             <div class="drill__pad" aria-hidden="true">
               <button data-drill-dir="U" type="button" tabindex="-1">▲</button>
               <button data-drill-dir="L" type="button" tabindex="-1">◀</button>

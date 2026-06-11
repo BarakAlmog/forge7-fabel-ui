@@ -164,7 +164,7 @@ export function createGateScene(canvas, { reduceMotion = false } = {}) {
   geo.setAttribute("color", new THREE.BufferAttribute(col, 3));
 
   const mat = new THREE.PointsMaterial({
-    size: 0.065,
+    size: 0.055,
     map: softDotTexture(),
     vertexColors: true,
     transparent: true,
@@ -176,15 +176,17 @@ export function createGateScene(canvas, { reduceMotion = false } = {}) {
   const points = new THREE.Points(geo, mat);
   scene.add(points);
 
-  /* ---------- post: bloom (the glow is real now) ---------- */
-  const BLOOM_BASE = isSmallScreen ? 0.55 : 0.7;
+  /* ---------- post: bloom, kept on a tight leash ----------
+     High threshold so only the ring and the hottest particles
+     glow; everything else stays crisp phosphor-on-void. */
+  const BLOOM_BASE = isSmallScreen ? 0.3 : 0.38;
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
   const bloomPass = new UnrealBloomPass(
     new THREE.Vector2(canvas.clientWidth || 1, canvas.clientHeight || 1),
     BLOOM_BASE, // strength
-    0.55, // radius
-    0.12 // threshold
+    0.32, // radius
+    0.42 // threshold
   );
   composer.addPass(bloomPass);
   composer.addPass(new OutputPass());
@@ -257,13 +259,18 @@ export function createGateScene(canvas, { reduceMotion = false } = {}) {
       pos[ix + 1] = (chaosY[i] + swirlY) * (1 - s) + calmY * s;
       pos[ix + 2] = (chaosZ[i] + swirlZ) * (1 - s) + calmZ * s;
 
-      // colour: hot → cool across the gate, flash at the ring
+      // colour: hot → cool across the gate, lifted near the ring
       const flick = 0.82 + 0.18 * Math.sin(t * 7 + seed[i] * 9);
       tmp.copy(HOT).lerp(HOT2, (Math.sin(seed[i] * 5) + 1) * 0.3);
       const cool = coolMix[i] > 0.7 ? CYAN : PHOS;
       tmp.lerp(cool, s);
-      const gateGlow = Math.exp(-x * x * 1.6) * 0.85;
-      const bright = (0.5 + 0.5 * flick) * (0.62 + gateGlow);
+      const gateGlow = Math.exp(-x * x * 1.6) * 0.45;
+      // particles right in front of the lens dim out instead of ballooning
+      const ddx = pos[ix] - camera.position.x;
+      const ddy = pos[ix + 1] - camera.position.y;
+      const ddz = pos[ix + 2] - camera.position.z;
+      const nearFade = smoothstep(0.35, 1.8, Math.sqrt(ddx * ddx + ddy * ddy + ddz * ddz));
+      const bright = (0.5 + 0.5 * flick) * (0.58 + gateGlow) * nearFade;
       col[ix] = tmp.r * bright;
       col[ix + 1] = tmp.g * bright;
       col[ix + 2] = tmp.b * bright;
@@ -277,11 +284,15 @@ export function createGateScene(canvas, { reduceMotion = false } = {}) {
     ringHeat.rotation.z = t * 0.18;
     ringOuter.rotation.z = -t * 0.1;
 
-    // crossing flash: gaussian bump around the moment we pierce the ring
+    // crossing flash: a wink, not a flashbang
     const crossGlow = Math.exp(-((scrollP - CROSS_P) ** 2) / (2 * 0.045 ** 2));
+    // the glow sprite is a billboard - fade it out as the camera closes in,
+    // otherwise it washes the whole frame mid-flight
+    const camDist = camera.position.length();
+    const spriteFade = smoothstep(2.2, 4.8, camDist);
     glow.material.opacity =
-      0.13 + Math.sin(t * 2.1) * 0.04 + (overdrive ? 0.1 : 0) + crossGlow * 0.35;
-    bloomPass.strength = (overdrive ? BLOOM_BASE + 0.4 : BLOOM_BASE) + crossGlow * 1.5;
+      (0.1 + Math.sin(t * 2.1) * 0.03 + (overdrive ? 0.06 : 0) + crossGlow * 0.1) * spriteFade;
+    bloomPass.strength = (overdrive ? BLOOM_BASE + 0.22 : BLOOM_BASE) + crossGlow * 0.5;
 
     // camera: fly the curve, look slightly ahead, hand over to the
     // origin-framed composition once we're through

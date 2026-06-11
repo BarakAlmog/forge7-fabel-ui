@@ -4,6 +4,9 @@
    ============================================================ */
 import { createGateScene } from "./gate.js";
 import { initDrill } from "./drill.js";
+import { SoundDeck } from "./sound.js";
+import { initDrone } from "./drone.js";
+import { initHaze } from "./haze.js";
 
 document.documentElement.classList.add("js");
 history.scrollRestoration = "manual";
@@ -22,7 +25,33 @@ const rand = (min, max) => min + Math.random() * (max - min);
 const randInt = (min, max) => Math.floor(rand(min, max + 1));
 const pad = (n, w) => String(n).padStart(w, "0");
 
-const state = { overdrive: false, booted: false };
+const state = { overdrive: false, booted: false, heroOn: true };
+const sound = new SoundDeck();
+
+/* ------------------------------------------------------------
+   Sound toggle (muted by default; a stored preference re-arms
+   on the first gesture, which satisfies autoplay policy)
+   ------------------------------------------------------------ */
+function soundToggle() {
+  const btn = $("#sndBtn");
+  const apply = (on) => {
+    btn.setAttribute("aria-pressed", String(on));
+    btn.textContent = on ? "SND·ON" : "SND·OFF";
+  };
+  const enable = (on) => {
+    sound.setEnabled(on);
+    apply(on);
+    if (on) {
+      sound.blip();
+      if (state.heroOn) sound.startHum();
+    }
+  };
+  btn.addEventListener("click", () => enable(!sound.enabled));
+  apply(false);
+  if (SoundDeck.wantsSound()) {
+    document.addEventListener("pointerdown", () => enable(true), { once: true });
+  }
+}
 
 /* ------------------------------------------------------------
    Gate scene
@@ -43,6 +72,18 @@ if (gate) {
 function heroFlight() {
   const flow = $("#flowTag");
   const flightEls = $$("[data-flight]");
+
+  // forge hum follows the gate on/off screen (motion preference agnostic)
+  ScrollTrigger.create({
+    trigger: ".hero",
+    start: "top bottom",
+    end: "bottom top",
+    onToggle: (self) => {
+      state.heroOn = self.isActive;
+      if (self.isActive) sound.startHum();
+      else sound.stopHum();
+    },
+  });
 
   if (REDUCE) {
     if (gate) gate.setScroll(1);
@@ -279,6 +320,7 @@ function opsFeed() {
     if (!REDUCE) {
       gsap.from(li, { autoAlpha: 0, y: 8, duration: 0.35, ease: "power2.out" });
     }
+    if (visible) sound.blip();
   }
 
   let pendingRetry = null;
@@ -455,6 +497,8 @@ function accessForm() {
     error.hidden = true;
     form.classList.add("is-sent");
     $("#transmitBtn").disabled = true;
+    sound.thud();
+    sound.win();
     done.hidden = false;
     if (!REDUCE) {
       gsap.from(done, { autoAlpha: 0, y: 14, duration: 0.6, ease: "power3.out" });
@@ -464,11 +508,22 @@ function accessForm() {
 }
 
 /* ------------------------------------------------------------
-   Footer fill sweep
+   Footer: heat-haze canvas drives the fill sweep; the DOM
+   clip-path version stays as the fallback when canvas is out
    ------------------------------------------------------------ */
 function footerFill() {
-  const fill = $(".foot__fill");
-  gsap.to(fill, {
+  const haze = initHaze({ reduceMotion: REDUCE });
+  if (haze) {
+    ScrollTrigger.create({
+      trigger: ".foot__shout",
+      start: "top 85%",
+      end: "top 30%",
+      scrub: REDUCE ? false : 0.5,
+      onUpdate: (self) => haze.setProgress(self.progress),
+    });
+    return;
+  }
+  gsap.to(".foot__fill", {
     clipPath: "inset(0 0% 0 0)",
     ease: "none",
     scrollTrigger: {
@@ -493,6 +548,7 @@ function overdrive() {
     state.overdrive = true;
     document.body.classList.add("is-overdrive");
     if (gate) gate.setOverdrive(true);
+    sound.sweep();
     gsap.to(banner, { autoAlpha: 1, y: -80, duration: 0.4, ease: "back.out(1.6)" });
 
     let remaining = 10;
@@ -589,13 +645,24 @@ overdrive();
 anchors();
 coordsReadout();
 furniture();
+soundToggle();
+
+const feedline = (sys, act, res) =>
+  document.dispatchEvent(new CustomEvent("forge7:feedline", { detail: { sys, act, res } }));
 
 const drill = initDrill({
   reduceMotion: REDUCE,
-  onFeedLine: (sys, act, res) =>
-    document.dispatchEvent(new CustomEvent("forge7:feedline", { detail: { sys, act, res } })),
+  onFeedLine: feedline,
+  audio: {
+    tick: () => sound.tick(),
+    clink: () => sound.clink(),
+    thud: () => sound.thud(),
+    win: () => sound.win(),
+  },
 });
 window.__forge7Drill = drill; // console tinkerers welcome
+
+initDrone({ reduceMotion: REDUCE, onFeedLine: feedline });
 
 window.addEventListener("load", () => {
   document.fonts.ready.then(() => ScrollTrigger.refresh());

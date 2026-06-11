@@ -60,7 +60,9 @@ const KEYMAP = {
 
 const key = (x, y) => `${x},${y}`;
 
-export function initDrill({ reduceMotion = false, onFeedLine = () => {} } = {}) {
+const NO_AUDIO = { tick() {}, clink() {}, thud() {}, win() {} };
+
+export function initDrill({ reduceMotion = false, onFeedLine = () => {}, audio = NO_AUDIO } = {}) {
   const board = document.getElementById("drillBoard");
   const stage = document.getElementById("drillStage");
   const levelEl = document.getElementById("drillLevel");
@@ -164,6 +166,8 @@ export function initDrill({ reduceMotion = false, onFeedLine = () => {} } = {}) 
           : "The month-end special: two records, two corners, one long walk. Feel it."
     );
     nextBtn.hidden = true;
+    const scores = document.getElementById("drillScores");
+    if (scores) scores.hidden = true;
   }
 
   function syncCrate(el, k) {
@@ -209,6 +213,7 @@ export function initDrill({ reduceMotion = false, onFeedLine = () => {} } = {}) 
 
     if (state.walls.has(nk)) {
       bump(dir);
+      audio.thud();
       return false;
     }
 
@@ -219,6 +224,7 @@ export function initDrill({ reduceMotion = false, onFeedLine = () => {} } = {}) 
       const ck = key(cx, cy);
       if (state.walls.has(ck) || state.crates.has(ck)) {
         bump(dir);
+        audio.thud();
         return false;
       }
       const crateEl = state.crates.get(nk);
@@ -237,6 +243,8 @@ export function initDrill({ reduceMotion = false, onFeedLine = () => {} } = {}) 
     state.history.push({ x, y, pushed });
     updateHud();
 
+    if (pushed) audio.clink();
+    else audio.tick();
     if (pushed) checkWin();
     return true;
   }
@@ -275,6 +283,7 @@ export function initDrill({ reduceMotion = false, onFeedLine = () => {} } = {}) 
 
     if (state.auto) return; // auto-run announces itself
 
+    audio.win();
     const quips = [
       `CONTAINED ✓ — ${state.moves} moves. Honest work. A Forge7 system does this ≈4,000 times a day and has never once felt proud.`,
       `CONTAINED ✓ — ${state.moves} moves. Imagine doing that every Tuesday, forever. That was the job.`,
@@ -282,8 +291,41 @@ export function initDrill({ reduceMotion = false, onFeedLine = () => {} } = {}) 
     ];
     setNote(quips[state.level]);
     onFeedLine("DRL-01", "training drill solved by visitor", `${state.moves} moves · fleet unimpressed ✓`);
+    showRecords();
     if (state.level < LEVELS.length - 1) {
       nextBtn.hidden = false;
+    }
+  }
+
+  /* ---------- floor records: theater, not telemetry ---------- */
+  function showRecords() {
+    const wrap = document.getElementById("drillScores");
+    if (!wrap) return;
+    const list = wrap.querySelector("ol");
+    const par = LEVELS[state.level].par;
+    const HUMANS = [
+      ["OP. KLAUS", "still proud"],
+      ["OP. MARGOT", "took a coffee mid-run"],
+      ["OP. JIN", "blamed the mouse"],
+      ["OP. PRIYA", "did it one-handed"],
+      ["OP. DUŠAN", "insists it was warm-up"],
+    ];
+    const picks = [...HUMANS].sort(() => Math.random() - 0.5).slice(0, 3);
+    const rows = [
+      { name: "UNIT TR-7", moves: par, note: "machine. obviously.", cls: "is-machine" },
+      { name: "YOU", moves: state.moves, note: state.moves <= par + 2 ? "suspiciously efficient" : "honest work", cls: "is-you" },
+      ...picks.map(([name, note]) => ({ name, moves: par + 3 + Math.floor(Math.random() * 14), note, cls: "" })),
+    ].sort((a, b) => a.moves - b.moves);
+
+    list.innerHTML = rows
+      .map(
+        (r) =>
+          `<li class="${r.cls}"><b>${r.name}</b><i>${String(r.moves).padStart(3, "0")} MOVES</i><span>${r.note}</span></li>`
+      )
+      .join("");
+    wrap.hidden = false;
+    if (!reduceMotion) {
+      gsap.from(list.children, { autoAlpha: 0, x: -10, duration: 0.4, stagger: 0.07, ease: "power2.out" });
     }
   }
 
