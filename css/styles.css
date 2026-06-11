@@ -1199,6 +1199,11 @@ a:hover { color: var(--phos); }
   word-break: break-word;
 }
 .term__line.t-sys { color: var(--phos); text-shadow: 0 0 10px rgba(61, 255, 192, 0.4); }
+.term__line .hot {
+  font-style: normal;
+  color: var(--heat);
+  text-shadow: 0 0 10px rgba(255, 106, 0, 0.45);
+}
 .term__line.t-usr { color: rgba(232, 244, 238, 0.72); }
 .term__line.t-gap { height: 10px; }
 

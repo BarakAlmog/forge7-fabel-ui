@@ -29,29 +29,30 @@ export function initTerminal({ reduceMotion = false, sound = null, feedline = ()
   let busy = false; // system is typing
   let done = false;
 
+  // [[word]] renders in heat-orange as the line types out
   const STEPS = [
     {
       key: "name",
-      prompt: "state your name, operator:",
+      prompt: "state your [[name]], operator:",
       validate: (v) => (v.length >= 2 ? true : "a name. any name. an alias is fine:"),
     },
     {
       key: "channel",
-      prompt: "callback channel (email):",
+      prompt: "callback channel ([[email]]):",
       validate: (v) =>
         /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
           ? true
           : "that's not a channel the fleet can reach. email, please:",
     },
     {
-      key: "chore",
-      prompt: "describe the chore, plainly. what eats your hours:",
+      key: "message",
+      prompt: "your [[message]] - what eats your hours, plainly:",
       validate: (v) =>
         v.length >= 12 ? true : "more detail, operator. the machines bill by specificity:",
     },
     {
       key: "hours",
-      prompt: "hours it steals, weekly (a number):",
+      prompt: "[[hours]] it steals, weekly (a number):",
       validate: (v) => {
         const n = Number(v);
         return Number.isFinite(n) && n >= 1 && n <= 120
@@ -82,24 +83,52 @@ export function initTerminal({ reduceMotion = false, sound = null, feedline = ()
     return div;
   }
 
+  /* prompts may mark words as [[hot]] - rendered heat-orange while typing */
+  function parseSegments(text) {
+    const parts = [];
+    const re = /\[\[(.+?)\]\]/g;
+    let last = 0;
+    let m;
+    while ((m = re.exec(text))) {
+      if (m.index > last) parts.push({ t: text.slice(last, m.index), hot: false });
+      parts.push({ t: m[1], hot: true });
+      last = re.lastIndex;
+    }
+    if (last < text.length) parts.push({ t: text.slice(last), hot: false });
+    return parts;
+  }
+  const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  function renderSliced(segs, count) {
+    let html = "";
+    let remaining = count;
+    for (const s of segs) {
+      if (remaining <= 0) break;
+      const take = s.t.slice(0, remaining);
+      remaining -= take.length;
+      html += s.hot ? `<i class="hot">${esc(take)}</i>` : esc(take);
+    }
+    return html;
+  }
+
   function sysType(text, after) {
     busy = true;
     inputRow.classList.add("is-waiting");
     const line = addLine("t-sys", "");
+    const segs = parseSegments(text);
+    const total = segs.reduce((n, s) => n + s.t.length, 0);
     if (reduceMotion) {
-      line.textContent = text;
+      line.innerHTML = renderSliced(segs, total);
       busy = false;
       inputRow.classList.remove("is-waiting");
       if (after) after();
       return;
     }
-    const full = text;
     let i = 0;
     const iv = setInterval(() => {
       i += 1 + Math.floor(Math.random() * 2);
-      line.textContent = full.slice(0, i);
+      line.innerHTML = renderSliced(segs, i);
       content.scrollTop = content.scrollHeight;
-      if (i >= full.length) {
+      if (i >= total) {
         clearInterval(iv);
         sfx("blip");
         busy = false;
