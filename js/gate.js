@@ -213,6 +213,10 @@ export function createGateScene(canvas, { reduceMotion = false } = {}) {
     composer.setSize(w, h);
     bloomPass.resolution.set(w, h);
     camera.aspect = w / h;
+    // landscape: pan the composition right so the gate keeps clear of the
+    // headline column (negative offset slides scene content rightward)
+    if (camera.aspect > 1.1) camera.setViewOffset(w, h, -w * 0.16, 0, w, h);
+    else camera.clearViewOffset();
     camera.updateProjectionMatrix();
     // portrait: pull back so the ring frames the copy instead of crowding it
     portraitFactor = camera.aspect < 0.8 ? 1.45 : camera.aspect < 1.1 ? 1.2 : 1;
