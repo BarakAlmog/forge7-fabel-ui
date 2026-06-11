@@ -46,16 +46,16 @@ body {
   overflow-x: clip;
 }
 
-/* blueprint grid + vignette */
+/* The conduit map: service runs with elbows, junction nodes and pads.
+   Each tile's middle run passes a tiny gate ring - dashed before, solid
+   after. The site's thesis, tiled. (Replaces the default-issue grid.) */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -1;
-  background-image:
-    linear-gradient(var(--grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-  background-size: 56px 56px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420' viewBox='0 0 420 420' fill='none'%3E%3Cg stroke='%237AFFD2' stroke-width='1.5'%3E%3Cpath d='M0 70 H270 Q280 70 280 80 V420' stroke-opacity='0.05'/%3E%3Cpath d='M280 70 H420' stroke-opacity='0.05'/%3E%3Cpath d='M0 210 H199' stroke-opacity='0.05' stroke-dasharray='3 5'/%3E%3Ccircle cx='210' cy='210' r='9' stroke-opacity='0.085'/%3E%3Cpath d='M221 210 H420' stroke-opacity='0.05'/%3E%3Cpath d='M0 330 H95 Q105 330 105 320 V0' stroke-opacity='0.05'/%3E%3Cpath d='M105 330 H420' stroke-opacity='0.05'/%3E%3Cpath d='M280 0 V14' stroke-opacity='0.05'/%3E%3Cpath d='M105 406 V420' stroke-opacity='0.05'/%3E%3Cpath d='M330 330 V296' stroke-opacity='0.05'/%3E%3Cpath d='M55 140 H65 M60 135 V145' stroke-opacity='0.04'/%3E%3C/g%3E%3Cg fill='%237AFFD2'%3E%3Crect x='273' y='14' width='14' height='8' fill-opacity='0.055'/%3E%3Crect x='98' y='398' width='14' height='8' fill-opacity='0.055'/%3E%3Crect x='323' y='288' width='14' height='8' fill-opacity='0.055'/%3E%3Ccircle cx='105' cy='330' r='2.5' fill-opacity='0.07'/%3E%3C/g%3E%3Ccircle cx='280' cy='70' r='2.5' fill='%23FF6A00' fill-opacity='0.055'/%3E%3C/svg%3E");
+  background-size: 420px 420px;
   mask-image: radial-gradient(120% 90% at 50% 40%, #000 40%, transparent 100%);
 }
 
