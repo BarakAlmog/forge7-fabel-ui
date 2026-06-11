@@ -103,13 +103,18 @@ function heroFlight() {
       pin: true,
       anticipatePin: 1,
       onUpdate: (self) => {
-        if (gate) gate.setScroll(self.progress);
+        const p = self.progress;
+        if (gate) gate.setScroll(p);
+        // kicker + hint are set directly from progress: scrub-rewind of
+        // lazily-initialized tweens proved unreliable for these two
+        if (state.booted) {
+          gsap.set("#heroHint", { autoAlpha: Math.max(0, 1 - p / 0.08) });
+          gsap.set(".hero__kicker", {
+            autoAlpha: p < 0.34 ? 1 : Math.max(0.35, 1 - ((p - 0.34) / 0.2) * 0.65),
+          });
+        }
         const bucket =
-          self.progress < 0.45
-            ? "FLOW: INBOUND CHAOS"
-            : self.progress < 0.68
-              ? "CROSSING THE GATE…"
-              : "FLOW: NOMINAL";
+          p < 0.45 ? "FLOW: INBOUND CHAOS" : p < 0.68 ? "CROSSING THE GATE…" : "FLOW: NOMINAL";
         if (bucket !== lastBucket) {
           lastBucket = bucket;
           flow.textContent = bucket;
@@ -118,15 +123,21 @@ function heroFlight() {
     },
   });
 
+  // NOTE: kicker/hint/chaos use explicit fromTo values - lazy capture would
+  // record 0 if the playhead enters before the boot intro reveals them
+  // (fast scrollers, deep links), making them rewind to invisible.
   tl.fromTo(
     ".line--order .line__in",
     { autoAlpha: 0.32 },
     { autoAlpha: 1, duration: 0.16, immediateRender: true, ease: "power1.in" },
     0.56
   )
-    .to("#heroHint", { autoAlpha: 0, duration: 0.08 }, 0.04)
-    .to(".line--chaos .line__in", { xPercent: -12, autoAlpha: 0.08, duration: 0.32, ease: "power1.in" }, 0.28)
-    .to(".hero__kicker", { autoAlpha: 0.35, duration: 0.2 }, 0.34)
+    .fromTo(
+      ".line--chaos .line__in",
+      { xPercent: 0, autoAlpha: 1 },
+      { xPercent: -12, autoAlpha: 0.08, duration: 0.32, ease: "power1.in", immediateRender: false },
+      0.28
+    )
     .to(".hero__sub", { autoAlpha: 1, y: 0, duration: 0.14, ease: "power2.out" }, 0.72)
     .to(".hero__cta", { autoAlpha: 1, y: 0, duration: 0.13, ease: "power2.out" }, 0.79)
     .to(".tele", { autoAlpha: 1, y: 0, duration: 0.12, ease: "power2.out" }, 0.87);

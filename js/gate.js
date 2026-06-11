@@ -179,7 +179,7 @@ export function createGateScene(canvas, { reduceMotion = false } = {}) {
   /* ---------- post: bloom, kept on a tight leash ----------
      High threshold so only the ring and the hottest particles
      glow; everything else stays crisp phosphor-on-void. */
-  const BLOOM_BASE = isSmallScreen ? 0.3 : 0.38;
+  const BLOOM_BASE = isSmallScreen ? 0.26 : 0.32;
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
   const bloomPass = new UnrealBloomPass(

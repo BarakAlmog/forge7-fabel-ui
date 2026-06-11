@@ -1,7 +1,8 @@
 /* ============================================================
    FORGE7 // cursor drone
-   A tiny maintenance unit shadows the pointer. Leave it idle
-   near the ops console and it performs an inspection.
+   A tiny maintenance unit that lives on the operations floor
+   (MODULE 01 only - it does not follow you around the site).
+   Leave it idle over the console and it performs an inspection.
    Fine pointers only; reduced-motion grounds the fleet.
    ============================================================ */
 "use strict";
@@ -9,6 +10,8 @@
 export function initDrone({ reduceMotion = false, onFeedLine = () => {} } = {}) {
   if (reduceMotion) return null;
   if (!window.matchMedia("(pointer: fine)").matches) return null;
+  const zone = document.querySelector("#operations");
+  if (!zone) return null;
 
   const el = document.createElement("div");
   el.className = "drone";
@@ -26,26 +29,45 @@ export function initDrone({ reduceMotion = false, onFeedLine = () => {} } = {}) 
   let lastInspect = 0;
   let patrolTl = null;
   let inspecting = false;
+  let inside = false;
   let rot = 0;
 
   const xTo = gsap.quickTo(el, "x", { duration: 0.45, ease: "power3" });
   const yTo = gsap.quickTo(el, "y", { duration: 0.45, ease: "power3" });
-  gsap.set(el, { x: pos.x, y: pos.y, autoAlpha: 0 });
+  gsap.set(el, { x: pos.x, y: pos.y, autoAlpha: 0, scale: 0.5 });
 
   window.addEventListener("pointermove", (e) => {
     if (e.pointerType === "touch") return;
+    const r = zone.getBoundingClientRect();
+    const within =
+      e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
     target.x = e.clientX + 18;
     target.y = e.clientY + 22;
+
+    if (within !== inside) {
+      inside = within;
+      if (inside) {
+        // wake up where the cursor enters, then shadow it
+        gsap.set(el, { x: target.x + 30, y: target.y + 30 });
+        gsap.to(el, { autoAlpha: 1, scale: 1, duration: 0.35, ease: "back.out(2)", overwrite: "auto" });
+      } else {
+        stopPatrol();
+        gsap.to(el, { autoAlpha: 0, scale: 0.5, duration: 0.3, overwrite: "auto" });
+      }
+    }
+    if (!inside) return;
+
     lastMove = performance.now();
     if (inspecting) return;
     stopPatrol();
-    gsap.to(el, { autoAlpha: 1, duration: 0.3, overwrite: "auto" });
     xTo(target.x);
     yTo(target.y);
   });
 
   document.documentElement.addEventListener("pointerleave", () => {
-    gsap.to(el, { autoAlpha: 0, duration: 0.4 });
+    inside = false;
+    stopPatrol();
+    gsap.to(el, { autoAlpha: 0, scale: 0.5, duration: 0.4 });
   });
 
   // bank toward travel direction
@@ -77,7 +99,7 @@ export function initDrone({ reduceMotion = false, onFeedLine = () => {} } = {}) 
   }
 
   function maybeIdle() {
-    if (inspecting || patrolTl) return;
+    if (!inside || inspecting || patrolTl) return;
     if (performance.now() - lastMove < 3500) return;
 
     const consoleEl = document.querySelector(".console");
