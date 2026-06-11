@@ -2,8 +2,14 @@
    FORGE7 // the gate
    Chaos in, order out: a particle stream crosses the ring at
    x=0 and snaps from hot turbulence into a cool lattice.
+   Scroll flies the camera straight through the ring, with an
+   UnrealBloom flash at the crossing.
    ============================================================ */
-import * as THREE from "./vendor/three.module.min.js";
+import * as THREE from "three";
+import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 
 const HOT = new THREE.Color("#FF6A00");
 const HOT2 = new THREE.Color("#FFB454");
@@ -46,7 +52,8 @@ export function createGateScene(canvas, { reduceMotion = false } = {}) {
     return null;
   }
 
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+  const isSmallScreen = Math.min(window.innerWidth, window.innerHeight) < 700;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isSmallScreen ? 1.4 : 1.75));
 
   const scene = new THREE.Scene();
   scene.fog = new THREE.FogExp2(0x05080a, 0.042);
@@ -55,7 +62,27 @@ export function createGateScene(canvas, { reduceMotion = false } = {}) {
   // as a 3/4-perspective ellipse instead of an edge-on line.
   const camera = new THREE.PerspectiveCamera(50, 2, 0.1, 60);
   const CAM_BASE = { x: 5.4, y: 1.5, z: 7.0 };
-  camera.position.set(CAM_BASE.x, CAM_BASE.y, CAM_BASE.z);
+
+  // Scroll flight: chaos side → through the ring → settle on the order side.
+  const FLIGHT = new THREE.CatmullRomCurve3(
+    [
+      new THREE.Vector3(-8.4, 1.2, 5.8),
+      new THREE.Vector3(-4.8, 0.6, 3.4),
+      new THREE.Vector3(-1.7, 0.4, 2.2),
+      new THREE.Vector3(0.7, 0.55, 2.0), // skim the ring's edge, keep it in frame
+      new THREE.Vector3(3.0, 1.0, 4.2),
+      new THREE.Vector3(CAM_BASE.x, CAM_BASE.y, CAM_BASE.z),
+    ],
+    false,
+    "centripetal"
+  );
+  const CROSS_P = 0.58; // flight progress where the camera pierces the ring
+  const ORIGIN = new THREE.Vector3(0, 0, 0);
+  const camPos = new THREE.Vector3();
+  const camAhead = new THREE.Vector3();
+  const camTarget = new THREE.Vector3();
+
+  camera.position.copy(FLIGHT.getPoint(0));
   camera.lookAt(0, 0, 0);
 
   /* ---------- the gate ---------- */
@@ -118,8 +145,8 @@ export function createGateScene(canvas, { reduceMotion = false } = {}) {
   const coolMix = new Float32Array(COUNT);
 
   function assignLanes(i) {
-    laneY[i] = (Math.floor(Math.random() * 9) - 4) * 0.46;
-    laneZ[i] = (Math.floor(Math.random() * 5) - 2) * 0.46;
+    laneY[i] = (Math.floor(Math.random() * 9) - 4) * 0.5;
+    laneZ[i] = (Math.floor(Math.random() * 7) - 3) * 0.5;
     chaosY[i] = (Math.random() - 0.5) * 4.6;
     chaosZ[i] = (Math.random() - 0.5) * 3.0;
     seed[i] = Math.random() * Math.PI * 2;
@@ -149,6 +176,19 @@ export function createGateScene(canvas, { reduceMotion = false } = {}) {
   const points = new THREE.Points(geo, mat);
   scene.add(points);
 
+  /* ---------- post: bloom (the glow is real now) ---------- */
+  const BLOOM_BASE = isSmallScreen ? 0.55 : 0.7;
+  const composer = new EffectComposer(renderer);
+  composer.addPass(new RenderPass(scene, camera));
+  const bloomPass = new UnrealBloomPass(
+    new THREE.Vector2(canvas.clientWidth || 1, canvas.clientHeight || 1),
+    BLOOM_BASE, // strength
+    0.55, // radius
+    0.12 // threshold
+  );
+  composer.addPass(bloomPass);
+  composer.addPass(new OutputPass());
+
   /* ---------- state ---------- */
   const pointer = { x: 0, y: 0 };
   let scrollP = 0;
@@ -156,7 +196,8 @@ export function createGateScene(canvas, { reduceMotion = false } = {}) {
   let visible = true;
   let running = false;
   let rafId = 0;
-  const clock = new THREE.Clock();
+  let lastFrameAt = 0;
+  let elapsed = 0;
   const tmp = new THREE.Color();
 
   let portraitFactor = 1;
@@ -165,10 +206,31 @@ export function createGateScene(canvas, { reduceMotion = false } = {}) {
     const h = canvas.clientHeight;
     if (w === 0 || h === 0) return;
     renderer.setSize(w, h, false);
+    composer.setSize(w, h);
+    bloomPass.resolution.set(w, h);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
     // portrait: pull back so the ring frames the copy instead of crowding it
     portraitFactor = camera.aspect < 0.8 ? 1.45 : camera.aspect < 1.1 ? 1.2 : 1;
+  }
+
+  // Position + aim the camera for flight progress p. `smooth` lerps the
+  // pointer-parallax so the flight itself stays locked on rails.
+  function placeCamera(p, smooth) {
+    FLIGHT.getPoint(p, camPos);
+    // portrait pull-back fades in as the flight settles
+    const pf = 1 + (portraitFactor - 1) * p;
+    camPos.multiplyScalar(pf);
+    const parallaxAmt = 0.25 + 0.75 * p;
+    camPos.x += pointer.x * 0.9 * parallaxAmt;
+    camPos.y += -pointer.y * 0.5 * parallaxAmt;
+    if (smooth > 0) camera.position.lerp(camPos, Math.min(1, smooth * 60 * 0.016 * 4));
+    else camera.position.copy(camPos);
+
+    FLIGHT.getPoint(Math.min(0.97, p + 0.1), camAhead);
+    const w = smoothstep(0.5, 0.82, p);
+    camTarget.copy(camAhead).lerp(ORIGIN, w);
+    camera.lookAt(camTarget);
   }
 
   function step(dt, t) {
@@ -214,30 +276,31 @@ export function createGateScene(canvas, { reduceMotion = false } = {}) {
     ring.scale.set(pulse, pulse, 1);
     ringHeat.rotation.z = t * 0.18;
     ringOuter.rotation.z = -t * 0.1;
-    glow.material.opacity = 0.13 + Math.sin(t * 2.1) * 0.04 + (overdrive ? 0.1 : 0);
 
-    // camera: parallax + scroll dolly along its own axis
-    const dolly = (1 + scrollP * 0.3) * portraitFactor;
-    const targetX = CAM_BASE.x * dolly + pointer.x * 0.9;
-    const targetY = CAM_BASE.y * dolly - pointer.y * 0.5;
-    const targetZ = CAM_BASE.z * dolly;
-    camera.position.x += (targetX - camera.position.x) * 0.05;
-    camera.position.y += (targetY - camera.position.y) * 0.05;
-    camera.position.z += (targetZ - camera.position.z) * 0.08;
-    camera.lookAt(0, 0, 0);
+    // crossing flash: gaussian bump around the moment we pierce the ring
+    const crossGlow = Math.exp(-((scrollP - CROSS_P) ** 2) / (2 * 0.045 ** 2));
+    glow.material.opacity =
+      0.13 + Math.sin(t * 2.1) * 0.04 + (overdrive ? 0.1 : 0) + crossGlow * 0.35;
+    bloomPass.strength = (overdrive ? BLOOM_BASE + 0.4 : BLOOM_BASE) + crossGlow * 1.5;
+
+    // camera: fly the curve, look slightly ahead, hand over to the
+    // origin-framed composition once we're through
+    placeCamera(scrollP, 0.06);
   }
 
-  function frame() {
+  function frame(now) {
     rafId = requestAnimationFrame(frame);
-    const dt = Math.min(clock.getDelta(), 0.05);
-    step(dt, clock.elapsedTime);
-    renderer.render(scene, camera);
+    const dt = Math.min((now - lastFrameAt) / 1000, 0.05);
+    lastFrameAt = now;
+    elapsed += dt;
+    step(dt, elapsed);
+    composer.render();
   }
 
   function start() {
     if (running || reduceMotion) return;
     running = true;
-    clock.getDelta();
+    lastFrameAt = performance.now();
     rafId = requestAnimationFrame(frame);
   }
   function stop() {
@@ -263,7 +326,7 @@ export function createGateScene(canvas, { reduceMotion = false } = {}) {
 
   // first frame (also the only frame under reduced motion)
   step(0.016, 0.5);
-  renderer.render(scene, camera);
+  composer.render();
   if (!reduceMotion) syncRunState();
 
   return {
@@ -274,10 +337,8 @@ export function createGateScene(canvas, { reduceMotion = false } = {}) {
     setScroll(p) {
       scrollP = p;
       if (reduceMotion) {
-        const dolly = (1 + p * 0.3) * portraitFactor;
-        camera.position.set(CAM_BASE.x * dolly, CAM_BASE.y * dolly, CAM_BASE.z * dolly);
-        camera.lookAt(0, 0, 0);
-        renderer.render(scene, camera);
+        placeCamera(p, 0);
+        composer.render();
       }
     },
     setOverdrive(on) {

@@ -350,6 +350,16 @@ a:hover { color: var(--phos); }
   gap: 14px;
   margin-top: clamp(24px, 4vh, 40px);
 }
+.hero__hint {
+  margin-top: clamp(18px, 3vh, 28px);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  color: var(--phos);
+}
+.hero__hint span { display: inline-block; animation: hint-bob 1.6s ease-in-out infinite; }
+@keyframes hint-bob { 50% { transform: translateY(4px); } }
+@media (prefers-reduced-motion: reduce) { .hero__hint span { animation: none; } }
 
 .tele {
   position: relative;
@@ -1129,7 +1139,8 @@ body.is-overdrive .console__live i { background: var(--heat); }
 /* ---- reveals (JS removes) ----------------------------------------------------- */
 .js [data-reveal] { opacity: 0; transform: translateY(28px); }
 .js [data-boot-reveal] { opacity: 0; transform: translateY(18px); }
-.no-js [data-reveal], .no-js [data-boot-reveal] { opacity: 1; transform: none; }
+.js [data-flight] { opacity: 0; transform: translateY(24px); }
+.no-js [data-reveal], .no-js [data-boot-reveal], .no-js [data-flight] { opacity: 1; transform: none; }
 .no-js .boot { display: none; }
 
 /* ---- reduced motion ------------------------------------------------------------ */

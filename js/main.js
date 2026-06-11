@@ -34,13 +34,61 @@ if (gate) {
     if (e.pointerType === "touch") return;
     gate.setPointer((e.clientX / window.innerWidth) * 2 - 1, (e.clientY / window.innerHeight) * 2 - 1);
   });
-  ScrollTrigger.create({
-    trigger: ".hero",
-    start: "top top",
-    end: "bottom top",
-    scrub: true,
-    onUpdate: (self) => gate.setScroll(self.progress),
+}
+
+/* ------------------------------------------------------------
+   Hero flight: pin the hero and fly the camera through the gate.
+   The copy follows the journey - chaos out, order in.
+   ------------------------------------------------------------ */
+function heroFlight() {
+  const flow = $("#flowTag");
+  const flightEls = $$("[data-flight]");
+
+  if (REDUCE) {
+    if (gate) gate.setScroll(1);
+    gsap.set(flightEls, { autoAlpha: 1, y: 0 });
+    flow.textContent = "FLOW: NOMINAL";
+    return;
+  }
+
+  let lastBucket = "";
+  const tl = gsap.timeline({
+    defaults: { ease: "none" },
+    scrollTrigger: {
+      trigger: ".hero",
+      start: "top top",
+      end: "+=140%",
+      scrub: 0.6,
+      pin: true,
+      anticipatePin: 1,
+      onUpdate: (self) => {
+        if (gate) gate.setScroll(self.progress);
+        const bucket =
+          self.progress < 0.45
+            ? "FLOW: INBOUND CHAOS"
+            : self.progress < 0.68
+              ? "CROSSING THE GATE…"
+              : "FLOW: NOMINAL";
+        if (bucket !== lastBucket) {
+          lastBucket = bucket;
+          flow.textContent = bucket;
+        }
+      },
+    },
   });
+
+  tl.fromTo(
+    ".line--order .line__in",
+    { autoAlpha: 0.32 },
+    { autoAlpha: 1, duration: 0.16, immediateRender: true, ease: "power1.in" },
+    0.56
+  )
+    .to("#heroHint", { autoAlpha: 0, duration: 0.08 }, 0.04)
+    .to(".line--chaos .line__in", { xPercent: -12, autoAlpha: 0.08, duration: 0.32, ease: "power1.in" }, 0.28)
+    .to(".hero__kicker", { autoAlpha: 0.35, duration: 0.2 }, 0.34)
+    .to(".hero__sub", { autoAlpha: 1, y: 0, duration: 0.14, ease: "power2.out" }, 0.72)
+    .to(".hero__cta", { autoAlpha: 1, y: 0, duration: 0.13, ease: "power2.out" }, 0.79)
+    .to(".tele", { autoAlpha: 1, y: 0, duration: 0.12, ease: "power2.out" }, 0.87);
 }
 
 /* ------------------------------------------------------------
@@ -531,6 +579,7 @@ clockUTC();
 telemetry();
 opsFeed();
 reveals();
+heroFlight();
 protocol();
 counters();
 clauses();

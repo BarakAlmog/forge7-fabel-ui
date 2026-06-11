@@ -68,7 +68,7 @@
         <i class="hud__c hud__c--tl"></i><i class="hud__c hud__c--tr"></i>
         <i class="hud__c hud__c--bl"></i><i class="hud__c hud__c--br"></i>
         <span class="hud__tag hud__tag--tl">FIG.00 // THE GATE</span>
-        <span class="hud__tag hud__tag--tr">FLOW: NOMINAL</span>
+        <span class="hud__tag hud__tag--tr" id="flowTag">FLOW: INBOUND CHAOS</span>
         <span class="hud__tag hud__tag--bl" id="coordsRead">CUR X:0000 Y:0000</span>
         <span class="hud__tag hud__tag--br">DPR-LOCKED // 60FPS TARGET</span>
       </div>
@@ -79,22 +79,25 @@
           AUTONOMOUS OPERATIONS AGENCY&nbsp;&nbsp;//&nbsp;&nbsp;FLEET ONLINE
         </p>
         <h1 class="hero__title" id="heroTitle">
-          <span class="line"><span class="line__in">CHAOS IN.</span></span>
+          <span class="line line--chaos"><span class="line__in">CHAOS IN.</span></span>
           <span class="line line--order"><span class="line__in">ORDER OUT.</span></span>
         </h1>
-        <p class="hero__sub" data-boot-reveal>
+        <p class="hero__hint" id="heroHint" data-boot-reveal aria-hidden="true">
+          SCROLL TO PASS THE GATE <span>↓</span>
+        </p>
+        <p class="hero__sub" data-flight>
           We build self-running systems for the work your team shouldn’t be doing,
           then we run them forever. Since you opened this page the Forge7 fleet has
           executed <b class="hero__live"><span id="heroTasks">0</span> tasks</b>.
           Nobody was in the room.
         </p>
-        <div class="hero__cta" data-boot-reveal>
+        <div class="hero__cta" data-flight>
           <a class="btn btn--solid" href="#access">Request access</a>
           <a class="btn btn--ghost" href="#operations">Watch the fleet ↓</a>
         </div>
       </div>
 
-      <div class="tele" data-boot-reveal>
+      <div class="tele" data-flight>
         <div class="tele__cell">
           <span class="tele__label">TASKS TODAY</span>
           <span class="tele__val" id="mTasksToday">000000</span>
@@ -641,6 +644,14 @@
   <!-- overdrive banner -->
   <div class="ovr" id="ovrBanner" aria-hidden="true">OVERDRIVE ENGAGED // FLEET AT 300% // <span id="ovrCount">10</span>s</div>
 
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./js/vendor/three.module.min.js",
+        "three/addons/": "./js/vendor/three-addons/"
+      }
+    }
+  </script>
   <script src="js/vendor/gsap.min.js"></script>
   <script src="js/vendor/ScrollTrigger.min.js"></script>
   <script src="js/vendor/ScrambleTextPlugin.min.js"></script>
