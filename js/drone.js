@@ -123,6 +123,26 @@ export function initDrone({ reduceMotion = false, onFeedLine = () => {} } = {}) 
     }
   }
 
+  function sparksAt(ix, iy) {
+    Array.from({ length: 3 }, (_, i) => {
+      const s = document.createElement("i");
+      s.className = "drone__spark";
+      document.body.appendChild(s);
+      gsap.set(s, { x: ix, y: iy, autoAlpha: 0 });
+      gsap
+        .timeline({ onComplete: () => s.remove() })
+        .to(s, { autoAlpha: 1, duration: 0.05, delay: i * 0.06 })
+        .to(s, {
+          x: ix + (Math.random() - 0.5) * 36,
+          y: iy - 10 - Math.random() * 18,
+          autoAlpha: 0,
+          duration: 0.5,
+          ease: "power2.out",
+        });
+      return s;
+    });
+  }
+
   function inspect(li) {
     inspecting = true;
     lastInspect = performance.now();
@@ -131,18 +151,9 @@ export function initDrone({ reduceMotion = false, onFeedLine = () => {} } = {}) 
     const ix = r.right - 30;
     const iy = r.top + r.height / 2;
 
-    const sparks = Array.from({ length: 3 }, () => {
-      const s = document.createElement("i");
-      s.className = "drone__spark";
-      document.body.appendChild(s);
-      gsap.set(s, { x: ix, y: iy, autoAlpha: 0 });
-      return s;
-    });
-
     gsap
       .timeline({
         onComplete: () => {
-          sparks.forEach((s) => s.remove());
           inspecting = false;
           lastMove = performance.now(); // settle, don't immediately re-inspect
         },
@@ -151,21 +162,31 @@ export function initDrone({ reduceMotion = false, onFeedLine = () => {} } = {}) 
       .to(el, { rotation: "+=360", duration: 0.6, ease: "power1.inOut" })
       .add(() => {
         onFeedLine("DRN-7", "cursor drone performed inspection", "nothing to fix ✓");
-        sparks.forEach((s, i) =>
-          gsap
-            .timeline()
-            .to(s, { autoAlpha: 1, duration: 0.05, delay: i * 0.06 })
-            .to(s, {
-              x: ix + (Math.random() - 0.5) * 36,
-              y: iy - 10 - Math.random() * 18,
-              autoAlpha: 0,
-              duration: 0.5,
-              ease: "power2.out",
-            })
-        );
+        sparksAt(ix, iy);
       })
       .to(el, { x: () => target.x, y: () => target.y, duration: 0.7, ease: "power2.inOut" }, "+=0.35");
   }
 
-  return el;
+  // off-zone errand (the stuck-pixel repair): fly anywhere, fix, fold away
+  function dispatch(ix, iy, done) {
+    if (inspecting) return false;
+    inspecting = true;
+    stopPatrol();
+    gsap.set(el, { x: ix + 80, y: iy - 120 });
+    gsap
+      .timeline({
+        onComplete: () => {
+          inspecting = false;
+          if (done) done();
+        },
+      })
+      .to(el, { autoAlpha: 1, scale: 1, duration: 0.25 })
+      .to(el, { x: ix, y: iy, duration: 0.7, ease: "power2.inOut" })
+      .to(el, { rotation: "+=360", duration: 0.5, ease: "power1.inOut" })
+      .add(() => sparksAt(ix, iy))
+      .to(el, { autoAlpha: 0, scale: 0.5, duration: 0.4 }, "+=0.4");
+    return true;
+  }
+
+  return { el, dispatch };
 }

@@ -195,6 +195,8 @@ export function createGateScene(canvas, { reduceMotion = false } = {}) {
   const pointer = { x: 0, y: 0 };
   let scrollP = 0;
   let overdrive = false;
+  let breach = 0; // 0 = lattice holds, 1 = full turbulence (the "chaos" egg)
+  let breachTarget = 0;
   let visible = true;
   let running = false;
   let rafId = 0;
@@ -237,6 +239,8 @@ export function createGateScene(canvas, { reduceMotion = false } = {}) {
 
   function step(dt, t) {
     const speedFactor = overdrive ? 3.1 : 1;
+    breach += (breachTarget - breach) * Math.min(1, dt * 3);
+    const swirlBoost = 1 + breach * 0.7;
     for (let i = 0; i < COUNT; i++) {
       const ix = i * 3;
       let x = pos[ix] + spd[i] * speedFactor * dt;
@@ -245,12 +249,13 @@ export function createGateScene(canvas, { reduceMotion = false } = {}) {
         assignLanes(i);
       }
 
-      const s = smoothstep(-2.4, 0.7, x);
+      // a containment breach collapses the lattice back into turbulence
+      const s = smoothstep(-2.4, 0.7, x) * (1 - breach);
       const swirlY =
-        Math.sin(t * 1.35 + seed[i] + x * 0.75) * 1.05 +
-        Math.sin(t * 2.4 + seed[i] * 2.1) * 0.32;
+        (Math.sin(t * 1.35 + seed[i] + x * 0.75) * 1.05 +
+          Math.sin(t * 2.4 + seed[i] * 2.1) * 0.32) * swirlBoost;
       const swirlZ =
-        Math.cos(t * 1.15 + seed[i] * 1.7 + x * 0.55) * 0.78;
+        Math.cos(t * 1.15 + seed[i] * 1.7 + x * 0.55) * 0.78 * swirlBoost;
 
       const calmY = laneY[i] + Math.sin(t * 0.9 + seed[i] * 3) * 0.045;
       const calmZ = laneZ[i];
@@ -354,6 +359,9 @@ export function createGateScene(canvas, { reduceMotion = false } = {}) {
     },
     setOverdrive(on) {
       overdrive = on;
+    },
+    setBreach(on) {
+      breachTarget = on ? 1 : 0;
     },
   };
 }

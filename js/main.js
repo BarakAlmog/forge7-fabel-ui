@@ -7,6 +7,7 @@ import { initDrill } from "./drill.js";
 import { SoundDeck } from "./sound.js";
 import { initDrone } from "./drone.js";
 import { initHaze } from "./haze.js";
+import { initProtocols } from "./protocols.js";
 
 document.documentElement.classList.add("js");
 history.scrollRestoration = "manual";
@@ -27,6 +28,28 @@ const pad = (n, w) => String(n).padStart(w, "0");
 
 const state = { overdrive: false, booted: false, heroOn: true };
 const sound = new SoundDeck();
+
+/* ------------------------------------------------------------
+   Toast: one shared status chip, bottom center
+   ------------------------------------------------------------ */
+const toastEl = document.createElement("div");
+toastEl.className = "toast";
+toastEl.setAttribute("role", "status");
+document.body.appendChild(toastEl);
+let toastTl = null;
+function toast(msg) {
+  toastEl.textContent = msg;
+  if (toastTl) toastTl.kill();
+  if (REDUCE) {
+    toastEl.classList.add("is-on");
+    setTimeout(() => toastEl.classList.remove("is-on"), 2400);
+    return;
+  }
+  toastTl = gsap
+    .timeline()
+    .fromTo(toastEl, { y: 18, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.3, ease: "power3.out" })
+    .to(toastEl, { autoAlpha: 0, y: 10, duration: 0.3, delay: 2.3 });
+}
 
 /* ------------------------------------------------------------
    Sound toggle (muted by default; a stored preference re-arms
@@ -270,6 +293,38 @@ function telemetry() {
   let tasksToday = Math.floor((d.getHours() * 60 + d.getMinutes()) * 4.7 + randInt(0, 120));
   const renderTasks = () => (tasksEl.textContent = tasksToday.toLocaleString("en-US"));
   renderTasks();
+
+  // ambient egg: poke the counter, log a manual task, get judged
+  const POKES = [
+    "MANUAL TASK LOGGED. IRONIC.",
+    "AGAIN? THE MACHINES ARE WATCHING.",
+    "THIRD MANUAL TASK. SEEK AUTOMATION.",
+    "THE FLEET FINDS THIS ADORABLE.",
+    "FINE. THAT ONE DIDN'T COUNT.",
+  ];
+  let pokeIdx = 0;
+  const pokeCell = tasksEl.closest(".tele__cell");
+  pokeCell.classList.add("tele__cell--poke");
+  pokeCell.setAttribute("role", "button");
+  pokeCell.setAttribute("tabindex", "0");
+  pokeCell.setAttribute("aria-label", "Log one manual task, ironically");
+  const poke = () => {
+    tasksToday += 1;
+    renderTasks();
+    sound.tick();
+    toast(POKES[pokeIdx % POKES.length]);
+    pokeIdx += 1;
+    if (!REDUCE) {
+      gsap.fromTo(tasksEl, { scale: 1.12 }, { scale: 1, duration: 0.3, ease: "power2.out", transformOrigin: "left center" });
+    }
+  };
+  pokeCell.addEventListener("click", poke);
+  pokeCell.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      poke();
+    }
+  });
   function bumpTasks() {
     tasksToday += state.overdrive ? randInt(6, 18) : randInt(1, 4);
     renderTasks();
@@ -364,10 +419,10 @@ function opsFeed() {
   new IntersectionObserver((entries) => (visible = entries[0].isIntersecting), { threshold: 0 })
     .observe(feed);
 
-  // other modules (the training drill) can report into the fleet feed
+  // other modules (drill, drone, protocols) can report into the fleet feed
   document.addEventListener("forge7:feedline", (e) => {
-    const { sys, act, res } = e.detail;
-    push(sys, act, res);
+    const { sys, act, res, warn } = e.detail;
+    push(sys, act, res, !!warn);
   });
 }
 
@@ -586,6 +641,7 @@ function overdrive() {
     if (tag === "INPUT" || tag === "TEXTAREA") return;
     engage();
   });
+  return { engage };
 }
 
 /* ------------------------------------------------------------
@@ -632,7 +688,8 @@ function furniture() {
       "└─────────────────────────────────────┘\n\n" +
       "You opened the hood. Naturally.\n" +
       "Vanilla JS, GSAP, Three.js, one honest particle field.\n" +
-      "Press [7] for overdrive. Request access at MODULE 06.\n",
+      "Press [7] for overdrive. Request access at MODULE 07.\n" +
+      "Type forge7.help() — yes, it's a real API.\n",
     "font-family: monospace; font-size: 14px; font-weight: 700; color: #3DFFC0;",
     "font-family: monospace; font-size: 11px; color: #7E948C;"
   );
@@ -652,14 +709,14 @@ counters();
 clauses();
 accessForm();
 footerFill();
-overdrive();
+const od = overdrive();
 anchors();
 coordsReadout();
 furniture();
 soundToggle();
 
-const feedline = (sys, act, res) =>
-  document.dispatchEvent(new CustomEvent("forge7:feedline", { detail: { sys, act, res } }));
+const feedline = (sys, act, res, warn = false) =>
+  document.dispatchEvent(new CustomEvent("forge7:feedline", { detail: { sys, act, res, warn } }));
 
 const drill = initDrill({
   reduceMotion: REDUCE,
@@ -673,7 +730,17 @@ const drill = initDrill({
 });
 window.__forge7Drill = drill; // console tinkerers welcome
 
-initDrone({ reduceMotion: REDUCE, onFeedLine: feedline });
+const drone = initDrone({ reduceMotion: REDUCE, onFeedLine: feedline });
+
+window.__forge7Protocols = initProtocols({
+  gate,
+  feedline,
+  sound,
+  engageOverdrive: od.engage,
+  toast,
+  drone,
+  reduceMotion: REDUCE,
+});
 
 window.addEventListener("load", () => {
   document.fonts.ready.then(() => ScrollTrigger.refresh());
