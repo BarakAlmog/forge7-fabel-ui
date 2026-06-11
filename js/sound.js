@@ -104,6 +104,15 @@ export class SoundDeck {
   comboUp() {
     this._tone({ freq: 600, end: 1300, dur: 0.09, type: "triangle", gain: 0.035 });
   }
+  alarm() {
+    // two-tone whoop, rising panic
+    this._tone({ freq: 620, end: 930, dur: 0.22, type: "square", gain: 0.025 });
+    this._tone({ freq: 930, end: 620, dur: 0.22, type: "square", gain: 0.025, delay: 0.24 });
+  }
+  meltdown() {
+    this._tone({ freq: 420, end: 48, dur: 0.7, type: "sawtooth", gain: 0.05 });
+    this._tone({ freq: 96, end: 40, dur: 0.5, type: "sine", gain: 0.06, delay: 0.15 });
+  }
 
   /* low forge drone while the gate is on screen */
   startHum() {

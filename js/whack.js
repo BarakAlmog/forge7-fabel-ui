@@ -154,6 +154,11 @@ export function initWhack({ reduceMotion = false, onFeedLine = () => {}, sound =
   const scoreEl = $("#wkScore");
   const escEl = $("#wkEsc");
   const streakEl = $("#wkStreak");
+  const panel = board.closest(".wk");
+  const pressureFill = $("#wkPressureFill");
+  const pressureLabel = $("#wkPressureLabel");
+  const floorName = $("#wkFloorName");
+  const helpBtn = $("#wkHelp");
   if (!board) throw new Error("FORGE7 // whack markup missing");
 
   const sfx = (name) => sound.enabled && sound[name] && sound[name]();
@@ -170,7 +175,113 @@ export function initWhack({ reduceMotion = false, onFeedLine = () => {}, sound =
     clockT: 0,
     slots: [],
     played: false,
+    pressure: 0,
+    stage: 0,
+    smokeT: 0,
   };
+
+  /* ---------------- stress system ----------------
+     Misses feed the pressure bar; the floor reacts in stages:
+     1 (25%): bar flickers amber, HELP ME!!! appears
+     2 (50%): sirens, red heat-wash, harder shakes
+     3 (75%): smoke - the machine is burning
+     100%: meltdown. the round does not survive it. */
+  const heat = document.createElement("i");
+  heat.className = "wk__heatwash";
+  board.appendChild(heat);
+  const sirenL = document.createElement("i");
+  sirenL.className = "wk__siren wk__siren--l";
+  const sirenR = document.createElement("i");
+  sirenR.className = "wk__siren wk__siren--r";
+  board.appendChild(sirenL);
+  board.appendChild(sirenR);
+
+  const FLOOR_NAMES = [
+    "SIM-WHACK // OPS FLOOR 7",
+    "SIM-WHACK // OPS FLOOR 7",
+    "SIM-WHACK // OPS FLOOR 7 — GETTING WARM",
+    "SIM-WHACK // OPS FLOOR 7 — ON FIRE",
+  ];
+  const PRESSURE_LABELS = [
+    "BACKLOG PRESSURE",
+    "BACKLOG PRESSURE — RISING",
+    "BACKLOG PRESSURE — CRITICAL",
+    "BACKLOG PRESSURE — MELTDOWN IMMINENT",
+  ];
+
+  function renderPressure() {
+    pressureFill.style.width = `${st.pressure}%`;
+    gsap.set(heat, { opacity: (st.pressure / 100) * 0.55 });
+  }
+
+  function shake(strength) {
+    if (reduceMotion) return;
+    gsap.fromTo(
+      panel,
+      { x: -strength },
+      { x: 0, duration: 0.3 + strength * 0.04, ease: "elastic.out(1.6, 0.22)", overwrite: "auto" }
+    );
+  }
+
+  function smokePuff() {
+    const b = board.getBoundingClientRect();
+    const s = document.createElement("i");
+    s.className = "wk__smoke";
+    board.appendChild(s);
+    const x = 20 + Math.random() * (b.width - 60);
+    gsap.set(s, { x, y: b.height * (0.25 + Math.random() * 0.6) });
+    gsap.to(s, {
+      y: `-=${70 + Math.random() * 70}`,
+      x: x + (Math.random() - 0.5) * 40,
+      scale: 2 + Math.random(),
+      autoAlpha: 0,
+      duration: 1.7 + Math.random() * 0.8,
+      ease: "power1.out",
+      onComplete: () => s.remove(),
+    });
+  }
+
+  function setStage(stage) {
+    if (stage === st.stage) return;
+    const rising = stage > st.stage;
+    st.stage = stage;
+    panel.classList.toggle("is-stage1", stage >= 1);
+    panel.classList.toggle("is-stage2", stage >= 2);
+    panel.classList.toggle("is-stage3", stage >= 3);
+    floorName.textContent = FLOOR_NAMES[stage];
+    pressureLabel.textContent = PRESSURE_LABELS[stage];
+
+    helpBtn.hidden = !(stage >= 1 && st.mode === "manual");
+
+    if (rising && stage >= 2) sfx("alarm");
+    clearInterval(st.smokeT);
+    if (stage >= 3 && !reduceMotion) {
+      st.smokeT = setInterval(smokePuff, 420);
+    }
+  }
+
+  function addPressure(amount) {
+    if (st.mode !== "manual") return;
+    st.pressure = Math.min(100, st.pressure + amount);
+    renderPressure();
+    setStage(st.pressure >= 75 ? 3 : st.pressure >= 50 ? 2 : st.pressure >= 25 ? 1 : 0);
+    shake(2 + st.stage * 2);
+    if (st.pressure >= 100) end(true);
+  }
+
+  function resetStress() {
+    st.pressure = 0;
+    clearInterval(st.smokeT);
+    setStage(0);
+    renderPressure();
+    helpBtn.hidden = true;
+  }
+
+  helpBtn.addEventListener("click", () => {
+    sfx("tick");
+    const term = document.querySelector("#access");
+    if (term) term.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+  });
 
   /* ---------------- board ---------------- */
   for (let i = 0; i < 9; i++) {
@@ -277,7 +388,7 @@ export function initWhack({ reduceMotion = false, onFeedLine = () => {}, sound =
     const life =
       st.mode === "fleet"
         ? 1200
-        : Math.max(760, 1500 - elapsedMs() * 0.012) * type.lifeMul;
+        : Math.max(680, 1500 - elapsedMs() * 0.014) * type.lifeMul;
 
     const task = { key, type, el, slot, hitsLeft: type.hits, dead: false, timer: 0 };
     slot.task = task;
@@ -323,6 +434,7 @@ export function initWhack({ reduceMotion = false, onFeedLine = () => {}, sound =
       st.escalated += 1;
       st.streak = 0;
       floatQuip(x, y - 20, "ESCALATED ↑", "is-warn");
+      addPressure(12);
     }
     if (reduceMotion) task.el.remove();
     else {
@@ -361,6 +473,7 @@ export function initWhack({ reduceMotion = false, onFeedLine = () => {}, sound =
     if (type.danger) {
       st.streak = 0;
       sfx("sad");
+      addPressure(8);
       document.body.classList.add("is-hr");
       setTimeout(() => document.body.classList.remove("is-hr"), 350);
       floatQuip(x, y - 26, type.quips[Math.floor(Math.random() * type.quips.length)], "is-bad");
@@ -439,15 +552,21 @@ export function initWhack({ reduceMotion = false, onFeedLine = () => {}, sound =
   function spawnLoop() {
     if (st.mode === "idle") return;
     spawnTask();
+    const e = elapsedMs();
+    // late shift: the backlog starts arriving in pairs
+    if (st.mode === "manual" && e > 15000 && Math.random() < Math.min(0.45, (e - 15000) / 50000)) {
+      spawnTask();
+    }
     const interval =
       st.mode === "fleet"
-        ? Math.max(170, 300 - elapsedMs() * 0.012)
-        : Math.max(430, 1050 - elapsedMs() * 0.013);
+        ? Math.max(170, 300 - e * 0.012)
+        : Math.max(380, 1050 - e * 0.015);
     st.spawnT = setTimeout(spawnLoop, interval);
   }
 
   function start(fleet = false) {
     clearBoard();
+    resetStress();
     overlay.hidden = true;
     st.mode = fleet ? "fleet" : "manual";
     board.classList.toggle("is-fleet", fleet);
@@ -466,14 +585,30 @@ export function initWhack({ reduceMotion = false, onFeedLine = () => {}, sound =
     }, 1000);
   }
 
-  function end() {
+  function end(meltdown = false) {
     const wasFleet = st.mode === "fleet";
     st.mode = "idle";
     clearTimeout(st.spawnT);
     clearInterval(st.clockT);
     clearBoard();
+    resetStress();
     board.classList.remove("is-fleet");
-    sfx(wasFleet ? "win" : "thud");
+    sfx(meltdown ? "meltdown" : wasFleet ? "win" : "thud");
+
+    if (meltdown) {
+      st.played = true;
+      st.best = Math.max(st.best, st.score);
+      onFeedLine("SIM-05", "manual mode meltdown", `pressure 100% · floor lost ⟳`, true);
+      setOverlay(
+        `<p class='wk__big wk__big--melt'>MELTDOWN.</p>` +
+          `<p class='wk__sub'>Backlog pressure hit 100% with ${st.timeLeft}s still on the clock.` +
+          ` The floor is gone. The tasks won.<br/>This is the exact moment people call us.` +
+          ` <a href='#access'>Skip the next meltdown →</a></p>` +
+          `<div class='wk__btns'><button class='btn btn--ghost' data-wk='manual'>AGAIN</button>` +
+          `<button class='btn btn--solid' data-wk='fleet'>WATCH FLEET MODE ▸</button></div>`
+      );
+      return;
+    }
 
     if (wasFleet) {
       onFeedLine("SIM-05", "fleet mode demo", `${st.score} pts · 0 escalated · as usual ✓`);
@@ -537,5 +672,6 @@ export function initWhack({ reduceMotion = false, onFeedLine = () => {}, sound =
     state: () => ({ mode: st.mode, score: st.score, escalated: st.escalated, best: st.best }),
     _spawn: spawnTask,
     _whackAll: () => st.slots.forEach((s) => s.task && whack(s.task)),
+    _addPressure: addPressure,
   };
 }

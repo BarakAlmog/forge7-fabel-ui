@@ -461,8 +461,13 @@
       <div class="wk panel" data-reveal>
         <div class="console__bar">
           <span class="console__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span class="console__name">SIM-WHACK // OPS FLOOR 7</span>
+          <span class="console__name" id="wkFloorName">SIM-WHACK // OPS FLOOR 7</span>
           <span class="wk__shift">45-SECOND SHIFT</span>
+        </div>
+
+        <div class="wk__pressure" aria-hidden="true">
+          <span class="wk__pressure-label" id="wkPressureLabel">BACKLOG PRESSURE</span>
+          <div class="wk__pressure-track"><i id="wkPressureFill"></i></div>
         </div>
 
         <div class="wk__layout">
@@ -478,6 +483,9 @@
               <div><span class="tele__label">ESCALATED</span><b id="wkEsc">0</b></div>
               <div><span class="tele__label">COMBO</span><b id="wkStreak">×1</b></div>
             </div>
+            <button class="wk__help" id="wkHelp" type="button" hidden>
+              HELP ME!!!<span>(the adult option)</span>
+            </button>
             <p class="wk__note">Every whack here is a task someone once did by hand,
             forever. The fleet finds this exhibit quaint.</p>
           </aside>
