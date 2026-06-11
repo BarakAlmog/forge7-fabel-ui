@@ -13,8 +13,10 @@ A landing page for a fictional AI automation agency, designed as a **living miss
 - **Boot sequence** - the page types itself online (`> suppressing busywork ... OK`), click to skip
 - **The Gate** - a Three.js stream of ~7,000 particles: hot orange turbulence snaps into a cool phosphor lattice as it crosses the ring
 - **Live ops feed** - a simulated production console with real timestamps, retries that recover, and `HUMAN INTERVENTIONS TODAY: 0`
-- **Seven phases, seven clauses** - sticky radial gauge, self-checking terms, a terminal-styled access request
-- Press **`7`** for overdrive
+- **Seven phases, seven clauses** - sticky radial gauge, self-checking terms
+- **The TERMLINK** - a Pip-Boy-style hardware terminal: log in, answer the smith's questions line by line, transmit
+- Press **`7`** for overdrive - and six more protocols are hidden on the page
+- Sprites from Kenney's CC0 [1-Bit Pack](https://kenney.nl/assets/1-bit-pack) (see assets/sprites/LICENSE.txt)
 
 ## Design system
 

@@ -23,11 +23,7 @@ export function initProtocols({
 } = {}) {
   const sfx = (name) => sound && sound.enabled && sound[name] && sound[name]();
   const guarded = (t) =>
-    !t ||
-    t.tagName === "INPUT" ||
-    t.tagName === "TEXTAREA" ||
-    t.isContentEditable ||
-    !!t.closest("#drillStage");
+    !t || t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable;
 
   /* ---------------------------------------------------------
      01 · while you were gone
@@ -319,7 +315,7 @@ export function initProtocols({
       console.log(
         "%cWORK ORDER · OPENING: APPRENTICE SMITH%c\n\n" +
           "  REQUIREMENTS: reads logs for fun · allergic to dashboards ·\n" +
-          "  pushes crates onto slots in under par · types in lowercase\n\n" +
+          "  designs pipelines at fleet par · types in lowercase\n\n" +
           "  COMPENSATION: your Tuesdays back, plus salary\n" +
           "  APPLY: transmit at MODULE 07 with the word “apprentice”\n",
         bright,

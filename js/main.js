@@ -3,11 +3,12 @@
    Boot → gate → live feed → telemetry. GSAP + one honest fleet.
    ============================================================ */
 import { createGateScene } from "./gate.js";
-import { initDrill } from "./drill.js";
+import { initPipeline } from "./pipeline.js";
 import { SoundDeck } from "./sound.js";
 import { initDrone } from "./drone.js";
 import { initHaze } from "./haze.js";
 import { initProtocols } from "./protocols.js";
+import { initTerminal } from "./terminal.js";
 
 document.documentElement.classList.add("js");
 history.scrollRestoration = "manual";
@@ -532,46 +533,7 @@ function clauses() {
   });
 }
 
-/* ------------------------------------------------------------
-   Module 06: access form
-   ------------------------------------------------------------ */
-function accessForm() {
-  const form = $("#accessForm");
-  const sess = `SESS-${pad(randInt(100, 9999), 4)}`;
-  $("#sessId").textContent = sess;
-  $("#sessEcho").textContent = sess;
-
-  const error = $("#accessError");
-  const done = $("#accessDone");
-
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const name = $("#fName").value.trim();
-    const email = $("#fChannel").value.trim();
-    const chore = $("#fChore").value.trim();
-    const hours = $("#fHours").value.trim();
-    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-    if (!name || !emailOk || !chore || !hours) {
-      error.hidden = false;
-      if (!REDUCE) {
-        gsap.fromTo("#transmitBtn", { x: -5 }, { x: 0, duration: 0.4, ease: "elastic.out(1.8, 0.2)", clearProps: "x" });
-      }
-      return;
-    }
-
-    error.hidden = true;
-    form.classList.add("is-sent");
-    $("#transmitBtn").disabled = true;
-    sound.thud();
-    sound.win();
-    done.hidden = false;
-    if (!REDUCE) {
-      gsap.from(done, { autoAlpha: 0, y: 14, duration: 0.6, ease: "power3.out" });
-    }
-    done.scrollIntoView({ behavior: REDUCE ? "auto" : "smooth", block: "nearest" });
-  });
-}
+/* Module 07's access form is now a Fallout-style terminal: js/terminal.js */
 
 /* ------------------------------------------------------------
    Footer: heat-haze canvas drives the fill sweep; the DOM
@@ -707,7 +669,6 @@ heroFlight();
 protocol();
 counters();
 clauses();
-accessForm();
 footerFill();
 const od = overdrive();
 anchors();
@@ -718,19 +679,23 @@ soundToggle();
 const feedline = (sys, act, res, warn = false) =>
   document.dispatchEvent(new CustomEvent("forge7:feedline", { detail: { sys, act, res, warn } }));
 
-const drill = initDrill({
-  reduceMotion: REDUCE,
-  onFeedLine: feedline,
-  audio: {
-    tick: () => sound.tick(),
-    clink: () => sound.clink(),
-    thud: () => sound.thud(),
-    win: () => sound.win(),
-  },
-});
-window.__forge7Drill = drill; // console tinkerers welcome
+// MODULE 05 is parked for redesign; init only if the section is unhidden
+if (!$("#drill").hidden) {
+  window.__forge7Pipeline = initPipeline({
+    reduceMotion: REDUCE,
+    onFeedLine: feedline,
+    audio: {
+      tick: () => sound.tick(),
+      clink: () => sound.clink(),
+      thud: () => sound.thud(),
+      win: () => sound.win(),
+    },
+  });
+}
 
 const drone = initDrone({ reduceMotion: REDUCE, onFeedLine: feedline });
+
+initTerminal({ reduceMotion: REDUCE, sound, feedline, toast });
 
 window.__forge7Protocols = initProtocols({
   gate,

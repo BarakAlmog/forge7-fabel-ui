@@ -16,7 +16,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2305080A'/%3E%3Ccircle cx='32' cy='32' r='22' fill='none' stroke='%233DFFC0' stroke-width='3'/%3E%3Ccircle cx='32' cy='32' r='9' fill='none' stroke='%23FF6A00' stroke-width='3'/%3E%3Cpath d='M32 2v8M32 54v8M2 32h8M54 32h8' stroke='%233DFFC0' stroke-width='3'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=VT323&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
@@ -46,7 +46,6 @@
       <a href="#systems">Systems</a>
       <a href="#protocol">Protocol</a>
       <a href="#deployments">Results</a>
-      <a href="#drill">Drill</a>
       <a href="#terms">Terms</a>
     </nav>
     <div class="bar__status">
@@ -444,56 +443,51 @@
       </div>
     </section>
 
-    <!-- ============ MODULE 05 · THE TRAINING FLOOR ============ -->
-    <section class="mod wrap" id="drill" aria-labelledby="drillTitle">
+    <!-- ============ MODULE 05 · THE ASSEMBLY FLOOR ============
+         Parked for redesign - the pipeline game is hidden until we
+         revisit it. Code lives in js/pipeline.js. -->
+    <section class="mod wrap" id="drill" aria-labelledby="drillTitle" hidden>
       <header class="mod__head" data-reveal>
         <span class="mod__id">MODULE 05</span>
         <span class="mod__rule" aria-hidden="true"></span>
         <span class="mod__name">THE TRAINING FLOOR</span>
       </header>
-      <h2 class="mod__title" id="drillTitle" data-reveal>Feel <em>the chore.</em></h2>
+      <h2 class="mod__title" id="drillTitle" data-reveal>Build <em>the machine.</em></h2>
       <p class="mod__sub" data-reveal>
-        Before the fleet takes a job, a human maps it by hand - so here’s a taste.
-        Misplaced records litter the floor. Push every crate onto its slot.
-        Then press <b>AUTO-RUN</b> and watch the machine be insufferable about it.
+        Records pour from the intake. The archive only takes them <b>validated</b>;
+        spam wants the shredder. Place the parts, press <b>RUN</b>, and keep your
+        hands off - that’s the whole product. Or press <b>AUTO-DESIGN</b> and watch
+        the fleet do your job in under a second.
       </p>
 
-      <div class="drill panel" data-reveal>
+      <div class="pipe panel" data-reveal>
         <div class="console__bar">
           <span class="console__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span class="console__name">SIM-SOKO // WAREHOUSE FLOOR 7</span>
-          <span class="drill__level" id="drillLevel">LEVEL I / III</span>
+          <span class="console__name">SIM-PIPE // ASSEMBLY FLOOR 7</span>
+          <span class="pipe__level" id="pipeLevel">LEVEL I / III</span>
         </div>
 
-        <div class="drill__layout">
-          <button class="drill__stage" id="drillStage" type="button"
-            aria-label="Sokoban training drill. Use arrow keys or W A S D to push crates onto slots. Z undoes, R resets.">
-            <div class="drill__board" id="drillBoard"></div>
-            <span class="drill__takeover" aria-hidden="true">CLICK / TAP TO TAKE CONTROL</span>
-          </button>
+        <div class="pipe__layout">
+          <div class="pipe__stage">
+            <div class="pipe__board" id="pipeBoard"
+              role="application"
+              aria-label="Pipeline builder. Select a part from the tray, then click a board cell to place it. Click a placed router to rotate it. Press RUN to start the flow."></div>
+          </div>
 
-          <aside class="drill__side">
-            <div class="drill__hud">
-              <div><span class="tele__label">MOVES</span><span class="drill__stat" id="drillMoves">000</span></div>
-              <div><span class="tele__label">PUSHES</span><span class="drill__stat" id="drillPushes">00</span></div>
+          <aside class="pipe__side">
+            <p class="pipe__status" id="pipeStatus" aria-live="polite"></p>
+            <div class="pipe__tray" id="pipeTray" aria-label="Parts tray"></div>
+            <p class="pipe__note" id="pipeNote" aria-live="polite"></p>
+            <div class="pipe__actions">
+              <button class="btn btn--solid pipe__btn" id="pipeRun" type="button">RUN ▸</button>
+              <button class="btn btn--ghost pipe__btn" id="pipeClear" type="button">Clear</button>
+              <button class="btn btn--ghost pipe__btn" id="pipeAuto" type="button">⚡ Auto-design</button>
+              <button class="btn btn--solid pipe__btn" id="pipeNext" type="button" hidden>Next level ▸</button>
             </div>
-            <p class="drill__note" id="drillNote" aria-live="polite"></p>
-            <div class="drill__actions">
-              <button class="btn btn--ghost drill__btn" id="drillUndo" type="button">Undo</button>
-              <button class="btn btn--ghost drill__btn" id="drillReset" type="button">Reset</button>
-              <button class="btn btn--solid drill__btn" id="drillAuto" type="button">Auto-run ▸</button>
-              <button class="btn btn--solid drill__btn" id="drillNext" type="button" hidden>Next level ▸</button>
-            </div>
-            <p class="drill__keys" aria-hidden="true">ARROWS / WASD · Z UNDO · R RESET · SWIPE ON TOUCH</p>
-            <div class="drill__scores" id="drillScores" hidden>
+            <p class="pipe__keys" aria-hidden="true">SELECT A PART · CLICK TO PLACE · CLICK A ROUTER TO ROTATE</p>
+            <div class="pipe__scores" id="pipeScores" hidden>
               <span class="tele__label">FLOOR RECORDS · THIS LEVEL</span>
               <ol></ol>
-            </div>
-            <div class="drill__pad" aria-hidden="true">
-              <button data-drill-dir="U" type="button" tabindex="-1">▲</button>
-              <button data-drill-dir="L" type="button" tabindex="-1">◀</button>
-              <button data-drill-dir="D" type="button" tabindex="-1">▼</button>
-              <button data-drill-dir="R" type="button" tabindex="-1">▶</button>
             </div>
           </aside>
         </div>
@@ -582,47 +576,46 @@
         The queue is real. Transmit early.
       </p>
 
-      <form class="term panel" id="accessForm" novalidate data-reveal>
-        <div class="console__bar">
-          <span class="console__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span class="console__name">ACCESS-REQUEST // SECURE CHANNEL</span>
-          <span class="term__sess" id="sessId">SESS-0000</span>
+      <div class="term" id="accessTerm" data-reveal>
+        <div class="term__frame">
+          <span class="term__framelabel" aria-hidden="true">FORGE7 INDUSTRIES (TM) TERMLINK</span>
+          <i class="term__screw term__screw--bl" aria-hidden="true"></i>
+          <i class="term__screw term__screw--br" aria-hidden="true"></i>
+
+          <div class="term__screen">
+            <div class="term__topbar" aria-hidden="true">
+              <span class="term__model">TERMLINK MK VII</span>
+              <span class="term__topright">
+                <span id="sessId">SESS-0000</span>
+                <span class="term__signal"><i></i><i></i><i></i><i class="off"></i></span>
+                <span class="term__battery"><i class="term__battery-body"><i class="term__battery-fill"></i></i><i class="term__battery-tip"></i></span>
+              </span>
+            </div>
+
+            <div class="term__content">
+              <div class="term__lock" id="termLock">
+                <p class="term__lock-sub">Want to send us a message?</p>
+                <button class="term__login" id="termLogin" type="button">[ PLEASE LOG IN ]</button>
+                <p class="term__lock-hint">NO PASSWORD. WE AUTOMATED IT AWAY.<span class="term__cursor" aria-hidden="true"></span></p>
+              </div>
+
+              <div class="term__console" id="termConsole" hidden>
+                <div class="term__lines" id="termLines" aria-live="polite"></div>
+                <form class="term__inputrow" id="termInputRow">
+                  <label class="term__prompt" for="termInput" id="termPrompt">&gt;</label>
+                  <input id="termInput" type="text" autocomplete="off" autocapitalize="off"
+                    spellcheck="false" enterkeyhint="send" aria-label="Terminal input. Answer the question above and press enter." />
+                </form>
+              </div>
+            </div>
+
+            <div class="term__bottombar" aria-hidden="true">
+              <span>ENCRYPTION: PRETEND</span>
+              <span>PATIENCE <i class="term__hp"><i></i></i> 100%</span>
+            </div>
+          </div>
         </div>
-
-        <div class="term__body">
-          <div class="term__field">
-            <label for="fName">&gt; operator_name:</label>
-            <input id="fName" name="name" type="text" autocomplete="name" placeholder="B. Cartwright" required />
-          </div>
-          <div class="term__field">
-            <label for="fChannel">&gt; callback_channel:</label>
-            <input id="fChannel" name="email" type="email" autocomplete="email" placeholder="you@yourfirm.com" required />
-          </div>
-          <div class="term__field term__field--area">
-            <label for="fChore">&gt; the_chore, described_plainly:</label>
-            <textarea id="fChore" name="chore" rows="4" placeholder="Every Monday I export three reports, merge them by hand, fix the dates, and email the result to four people who never reply…" required></textarea>
-          </div>
-          <div class="term__field term__field--small">
-            <label for="fHours">&gt; hours_lost_weekly:</label>
-            <input id="fHours" name="hours" type="number" min="1" max="80" placeholder="6" required />
-          </div>
-
-          <p class="term__error" id="accessError" role="alert" hidden>
-            ERR // ALL FIELDS REQUIRED. THE MACHINES ARE STRICT ABOUT INPUTS.
-          </p>
-
-          <div class="term__actions">
-            <button class="btn btn--solid term__send" id="transmitBtn" type="submit">TRANSMIT&nbsp;▸</button>
-            <span class="term__hint">RESPONSE &lt; 24H // A HUMAN REPLIES. THE MACHINES STAY BUSY.</span>
-          </div>
-        </div>
-
-        <div class="term__done" id="accessDone" hidden>
-          <p class="term__done-line"><span class="term__ok">✓ REQUEST QUEUED</span> // ACK &lt; 24H</p>
-          <p class="term__done-sub">Transmission <b id="sessEcho">SESS-0000</b> received. A smith is being woken.
-          Keep the chore warm - it has weeks to live.</p>
-        </div>
-      </form>
+      </div>
     </section>
 
   </main>
@@ -637,7 +630,7 @@
       <div class="foot__row">
         <span>FORGE7 // AUTONOMOUS OPERATIONS</span>
         <nav class="foot__nav" aria-label="Footer">
-          <a href="#operations">Operations</a><a href="#systems">Systems</a><a href="#protocol">Protocol</a><a href="#deployments">Results</a><a href="#drill">Drill</a><a href="#terms">Terms</a><a href="#access">Access</a>
+          <a href="#operations">Operations</a><a href="#systems">Systems</a><a href="#protocol">Protocol</a><a href="#deployments">Results</a><a href="#terms">Terms</a><a href="#access">Access</a>
         </nav>
       </div>
       <div class="foot__row foot__row--fine">
